@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
-	"github.com/market-tracker/market-tracker/config"
-	"github.com/market-tracker/market-tracker/replicators"
-	"github.com/market-tracker/market-tracker/server"
-	"github.com/market-tracker/market-tracker/wsTiingo"
+	"markettracker.com/config"
+	"markettracker.com/replicators"
+	"markettracker.com/server"
+	"markettracker.com/wsTiingo"
 )
 
 func init() {

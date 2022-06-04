@@ -3,7 +3,7 @@ package replicators
 import (
 	"log"
 
-	"github.com/market-tracker/market-tracker/wsMsg"
+	"markettracker.com/wsMsg"
 )
 
 // Dummy follows the Replicator interface of

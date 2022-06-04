@@ -1,6 +1,6 @@
 package replicators
 
-import "github.com/market-tracker/market-tracker/wsMsg"
+import "markettracker.com/wsMsg"
 
 // Replciators must follow this interface to will be passed
 // to the arguments in the setup of the instance of the

@@ -12,7 +12,7 @@ import (
 
 	"golang.org/x/time/rate"
 
-	"github.com/market-tracker/market-tracker/pkg/errorHandler"
+	"markettracker.com/pkg/errorHandler"
 	"nhooyr.io/websocket"
 )
 

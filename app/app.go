@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/market-tracker/market-tracker/health"
+	"markettracker.com/health"
 
 	"github.com/gin-gonic/gin"
 )

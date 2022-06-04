@@ -8,9 +8,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/market-tracker/market-tracker/pkg/errorHandler"
-	"github.com/market-tracker/market-tracker/pkg/wsWrapper"
-	"github.com/market-tracker/market-tracker/wsMsg"
+	"markettracker.com/pkg/errorHandler"
+	"markettracker.com/pkg/wsWrapper"
+	"markettracker.com/wsMsg"
 	"nhooyr.io/websocket"
 )
 

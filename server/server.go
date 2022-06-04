@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/market-tracker/market-tracker/app"
+	"markettracker.com/app"
 )
 
 type Server struct {
