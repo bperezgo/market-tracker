@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
+	"markettracker.com/internal/platform/wspool/wsMsg"
 	"markettracker.com/pkg/wsWrapper"
-	"markettracker.com/wsMsg"
 	"nhooyr.io/websocket"
 )
 

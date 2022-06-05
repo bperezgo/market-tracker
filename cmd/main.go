@@ -5,9 +5,7 @@ import (
 	"log"
 
 	"markettracker.com/config"
-	"markettracker.com/internal/platform/server"
-	"markettracker.com/replicators"
-	"markettracker.com/wsTiingo"
+	"markettracker.com/internal/platform/wspool/wsTiingo"
 )
 
 func init() {
@@ -15,7 +13,6 @@ func init() {
 	log.SetFlags(0)
 	ctx := context.Background()
 	c := config.GetConfiguration()
-	dummyReplicator := &replicators.Dummy{}
 	tiingoOpts := &wsTiingo.TiingoOptions{
 		Url: c.TiingoApiUrl,
 		SubEvent: &wsTiingo.SubTiingoOpts{
@@ -24,9 +21,6 @@ func init() {
 			EventData: &wsTiingo.EventDataTiingo{
 				ThresholdLevel: 5,
 			},
-		},
-		Consumers: []replicators.Replicator{
-			dummyReplicator,
 		},
 	}
 	ws := wsTiingo.NewWsTiingo(ctx, tiingoOpts)
@@ -38,6 +32,5 @@ func init() {
 
 func main() {
 	c := config.GetConfiguration()
-	s := server.InitServer(c.Port)
-	s.Start()
+	log.Println(c)
 }
