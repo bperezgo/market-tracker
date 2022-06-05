@@ -8,6 +8,7 @@ import (
 
 type Configuration struct {
 	Port           int32
+	Host           string
 	TiingoApiToken string
 	TiingoApiUrl   string
 }

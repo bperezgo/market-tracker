@@ -13,7 +13,7 @@ type Consumer interface {
 type WsTiingo struct {
 	conn      *websocket.Conn
 	wsWrapper *wsWrapper.WsWrapper
-	opts      *TiingoOptions
+	opts      TiingoOptions
 }
 
 type EventDataTiingo struct {

@@ -1,13 +1,39 @@
 package server
 
+import (
+	"context"
+	"fmt"
+	"log"
+	"net/http"
+	"time"
+)
+
 type Server struct {
-	port int32
+	httpAddr        string
+	shutdownTimeout time.Duration
 }
 
-func (s *Server) Start() {
-	// addr := fmt.Sprintf(":%d", s.port)
+func New(host string, port int32) *Server {
+	addr := fmt.Sprintf("%s:%d", host, port)
+	return &Server{
+		httpAddr:        addr,
+		shutdownTimeout: 10 * time.Second,
+	}
 }
 
-func New(port int32) *Server {
-	return &Server{port: port}
+func (s *Server) Start(ctx context.Context) error {
+	log.Println("Server running on", s.httpAddr)
+	srv := http.Server{
+		Addr: s.httpAddr,
+	}
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatal("server shut down", err)
+		}
+	}()
+	<-ctx.Done()
+	ctxShutDown, cancel := context.WithTimeout(context.Background(), s.shutdownTimeout)
+	defer cancel()
+
+	return srv.Shutdown(ctxShutDown)
 }

@@ -13,11 +13,7 @@ import (
 )
 
 // Constructor of WsTiingo
-func NewWsTiingo(ctx context.Context, opts *TiingoOptions) *WsTiingo {
-	if opts == nil {
-		// err := errors.New("ERROR: opts is needed")
-		return nil
-	}
+func New(ctx context.Context, opts TiingoOptions) *WsTiingo {
 	dialOps := &websocket.DialOptions{}
 	c, _, _ := websocket.Dial(ctx, opts.Url, dialOps)
 	wsWrapper := wsWrapper.NewWsWrapper(16)
