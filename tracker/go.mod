@@ -1,4 +1,4 @@
-module markettracker.com
+module markettracker.com/tracker
 
 go 1.18
 

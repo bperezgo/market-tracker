@@ -1,7 +1,7 @@
 package wsTiingo
 
 import (
-	"markettracker.com/pkg/wsWrapper"
+	"markettracker.com/tracker/pkg/wsWrapper"
 	"nhooyr.io/websocket"
 )
 

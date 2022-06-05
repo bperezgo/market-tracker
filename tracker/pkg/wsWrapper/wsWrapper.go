@@ -24,7 +24,7 @@ type WsWrapper struct {
 	nSubscribers            int
 }
 
-func NewWsWrapper(subscriberMessageBuffer int) *WsWrapper {
+func New(subscriberMessageBuffer int) *WsWrapper {
 	if subscriberMessageBuffer < 0 {
 		return nil
 	}

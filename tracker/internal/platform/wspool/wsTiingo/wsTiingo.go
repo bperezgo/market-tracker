@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
-	"markettracker.com/internal/platform/wspool/wsMsg"
-	"markettracker.com/pkg/wsWrapper"
+	"markettracker.com/tracker/internal/platform/wspool/wsMsg"
+	"markettracker.com/tracker/pkg/wsWrapper"
 	"nhooyr.io/websocket"
 )
 
@@ -16,7 +16,7 @@ import (
 func New(ctx context.Context, opts TiingoOptions) *WsTiingo {
 	dialOps := &websocket.DialOptions{}
 	c, _, _ := websocket.Dial(ctx, opts.Url, dialOps)
-	wsWrapper := wsWrapper.NewWsWrapper(16)
+	wsWrapper := wsWrapper.New(16)
 	return &WsTiingo{
 		conn:      c,
 		wsWrapper: wsWrapper,

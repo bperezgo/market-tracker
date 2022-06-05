@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"markettracker.com/cmd/bootstrap"
+	"markettracker.com/tracker/cmd/bootstrap"
 )
 
 func main() {

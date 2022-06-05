@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"markettracker.com/config"
-	"markettracker.com/internal/platform/server"
-	"markettracker.com/internal/platform/wspool/wsTiingo"
+	"markettracker.com/tracker/config"
+	"markettracker.com/tracker/internal/platform/server"
+	"markettracker.com/tracker/internal/platform/wspool/wsTiingo"
 )
 
 func Run() error {
