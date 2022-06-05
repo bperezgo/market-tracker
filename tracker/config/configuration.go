@@ -11,6 +11,13 @@ type Configuration struct {
 	Host           string
 	TiingoApiToken string
 	TiingoApiUrl   string
+	Events         []Event
+}
+
+type Event struct {
+	Type    string
+	Brokers []string
+	Topic   string
 }
 
 var configuration *Configuration

@@ -2,5 +2,12 @@
     "Port": 3000,
     "Host": "http://localhost",
     "TiingoApiToken": "some super secret key",
-    "TiingoApiUrl": "wss://api.tiingo.com/crypto"
+    "TiingoApiUrl": "wss://api.tiingo.com/crypto",
+    "Events": [
+        {
+            "Type": "",
+            "Brokers": [""],
+            "Topic": ""
+        }
+    ]
 }
