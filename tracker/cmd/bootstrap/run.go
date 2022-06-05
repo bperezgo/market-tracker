@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"markettracker.com/tracker/config"
-	"markettracker.com/tracker/internal/platform/bus/inmemory"
+	"markettracker.com/tracker/internal/platform/bus/kafka"
 	"markettracker.com/tracker/internal/platform/server"
 	"markettracker.com/tracker/internal/platform/wspool/wsTiingo"
 	"markettracker.com/tracker/internal/replicate"
@@ -16,7 +16,7 @@ func Run() error {
 	log.SetFlags(0)
 	ctx := context.Background()
 	c := config.GetConfiguration()
-	eventBus := inmemory.NewEventBus()
+	eventBus := kafka.NewEventBus()
 	replicator := replicate.New(eventBus)
 	tiingoOpts := wsTiingo.TiingoOptions{
 		Url: c.TiingoApiUrl,

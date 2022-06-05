@@ -1,9 +1,48 @@
 package event
 
-import "context"
+import (
+	"context"
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Bus interface {
 	Publish(context.Context, []Event) error
 }
 
-type Event interface{}
+// Type represents a domain event type.
+type Type string
+
+type Event interface {
+	Id() string
+	AggregateId() string
+	OccurredOn() time.Time
+	Type() Type
+}
+
+type BaseEvent struct {
+	eventId     string
+	aggregateId string
+	occurredOn  time.Time
+}
+
+func NewBaseEvent(aggregateId string) BaseEvent {
+	return BaseEvent{
+		eventId:     uuid.New().String(),
+		aggregateId: aggregateId,
+		occurredOn:  time.Now(),
+	}
+}
+
+func (b BaseEvent) ID() string {
+	return b.eventId
+}
+
+func (b BaseEvent) OccurredOn() time.Time {
+	return b.occurredOn
+}
+
+func (b BaseEvent) AggregateID() string {
+	return b.aggregateId
+}

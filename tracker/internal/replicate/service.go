@@ -20,7 +20,7 @@ func New(eventBus event.Bus) *Replicator {
 	}
 }
 
-func (a *Replicator) Replicate(ctx context.Context, marketMsg domain.MarketTrackerMsg) {
+func (a *Replicator) Replicate(ctx context.Context, marketMsg domain.MarketTrackerDTO) {
 	log.Printf("New Market Message")
 	log.Printf("%+v", marketMsg)
 	a.eventBus.Publish(ctx, []event.Event{})

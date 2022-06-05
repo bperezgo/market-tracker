@@ -1,8 +1,7 @@
-package inmemory
+package kafka
 
 import (
 	"context"
-	"log"
 
 	"markettracker.com/tracker/pkg/event"
 )
@@ -13,8 +12,6 @@ func NewEventBus() *EventBus {
 	return &EventBus{}
 }
 
-func (EventBus) Publish(ctx context.Context, events []event.Event) error {
-	log.Println("Events")
-	log.Println(events)
+func (eb *EventBus) Publish(ctx context.Context, events []event.Event) error {
 	return nil
 }

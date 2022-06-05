@@ -8,7 +8,7 @@ import "time"
 //
 // Exchange field will be used to find a table where is neede to save the data
 // The other fields, will be used to analyze the behavior of the market
-type MarketTrackerMsg struct {
+type MarketTrackerDTO struct {
 	Ticker    string
 	Date      time.Time
 	Exchange  string

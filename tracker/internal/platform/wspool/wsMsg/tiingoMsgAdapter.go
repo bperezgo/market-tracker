@@ -8,7 +8,7 @@ import (
 )
 
 // Must implements IMsgAdapter
-func TiingoAdapter(msg *TiingoMsg) domain.MarketTrackerMsg {
+func TiingoAdapter(msg *TiingoMsg) domain.MarketTrackerDTO {
 	// [Msg Type, Ticker, Date, Exchange, LastSize, LastPrice]
 	var values [6]interface{}
 	for idx, el := range msg.Data {
@@ -20,26 +20,26 @@ func TiingoAdapter(msg *TiingoMsg) domain.MarketTrackerMsg {
 	}
 	date, ok := values[2].(string)
 	if !ok {
-		return domain.MarketTrackerMsg{}
+		return domain.MarketTrackerDTO{}
 	}
 	dateTime, err := time.Parse(time.RFC3339, date)
 	if err != nil {
 		log.Println(err)
-		return domain.MarketTrackerMsg{}
+		return domain.MarketTrackerDTO{}
 	}
 	exchange, ok := values[3].(string)
 	if !ok {
-		return domain.MarketTrackerMsg{}
+		return domain.MarketTrackerDTO{}
 	}
 	lastSize, ok := values[4].(float64)
 	if !ok {
-		return domain.MarketTrackerMsg{}
+		return domain.MarketTrackerDTO{}
 	}
 	lastPrice, ok := values[5].(float64)
 	if !ok {
-		return domain.MarketTrackerMsg{}
+		return domain.MarketTrackerDTO{}
 	}
-	marketData := domain.MarketTrackerMsg{
+	marketData := domain.MarketTrackerDTO{
 		Ticker:    ticker,
 		Date:      dateTime,
 		Exchange:  exchange,
