@@ -2,9 +2,12 @@ package wsTiingo
 
 import (
 	"markettracker.com/pkg/wsWrapper"
-	"markettracker.com/replicators"
 	"nhooyr.io/websocket"
 )
+
+type Consumer interface {
+	Publish(interface{})
+}
 
 // TODO: dependency injection strategy
 type WsTiingo struct {
@@ -26,5 +29,5 @@ type SubTiingoOpts struct {
 type TiingoOptions struct {
 	Url       string
 	SubEvent  *SubTiingoOpts
-	Consumers []replicators.Replicator
+	Consumers []Consumer
 }

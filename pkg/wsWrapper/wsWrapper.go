@@ -5,14 +5,12 @@ package wsWrapper
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sync"
 	"time"
 
 	"golang.org/x/time/rate"
 
-	"markettracker.com/pkg/errorHandler"
 	"nhooyr.io/websocket"
 )
 
@@ -28,7 +26,7 @@ type WsWrapper struct {
 
 func NewWsWrapper(subscriberMessageBuffer int) *WsWrapper {
 	if subscriberMessageBuffer < 0 {
-		errorHandler.PanicError(errors.New("[ERROR] Invalid Parameter, subscriberMessageBuffer must be greater or equal than 0"))
+		return nil
 	}
 	return &WsWrapper{
 		subscriberMessageBuffer: subscriberMessageBuffer,

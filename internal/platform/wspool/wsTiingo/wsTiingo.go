@@ -3,12 +3,10 @@ package wsTiingo
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"os"
 
-	"markettracker.com/pkg/errorHandler"
 	"markettracker.com/pkg/wsWrapper"
 	"markettracker.com/wsMsg"
 	"nhooyr.io/websocket"
@@ -17,12 +15,11 @@ import (
 // Constructor of WsTiingo
 func NewWsTiingo(ctx context.Context, opts *TiingoOptions) *WsTiingo {
 	if opts == nil {
-		err := errors.New("ERROR: opts is needed")
-		errorHandler.PanicError(err)
+		// err := errors.New("ERROR: opts is needed")
+		return nil
 	}
 	dialOps := &websocket.DialOptions{}
-	c, _, err := websocket.Dial(ctx, opts.Url, dialOps)
-	errorHandler.PanicError(err)
+	c, _, _ := websocket.Dial(ctx, opts.Url, dialOps)
 	wsWrapper := wsWrapper.NewWsWrapper(16)
 	return &WsTiingo{
 		conn:      c,
@@ -40,10 +37,8 @@ func (w *WsTiingo) Close() error {
 func (w *WsTiingo) Subscribe(ctx context.Context) {
 	// Subscription to the api
 	msg, err := json.Marshal(w.opts.SubEvent)
-	errorHandler.LogError(err)
 	if err = w.conn.Write(ctx, websocket.MessageText, msg); err != nil {
 		// TODO: Is it necesary to panic in this part if some websocket failed?
-		errorHandler.PanicError(err)
 	}
 }
 
@@ -55,10 +50,11 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 		defer close(done)
 		for {
 			_, message, err := w.conn.Read(ctx)
-			errorHandler.LogError(err)
+			if err != nil {
+				continue
+			}
 			tiingoMsg := &wsMsg.TiingoMsg{}
 			if err := json.Unmarshal(message, tiingoMsg); err != nil {
-				errorHandler.LogError(err)
 				continue
 			}
 			// TODO: Handle the error with more logic if failed

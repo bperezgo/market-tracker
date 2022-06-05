@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"markettracker.com/config"
+	"markettracker.com/internal/platform/server"
 	"markettracker.com/replicators"
-	"markettracker.com/server"
 	"markettracker.com/wsTiingo"
 )
 
@@ -30,7 +30,6 @@ func init() {
 		},
 	}
 	ws := wsTiingo.NewWsTiingo(ctx, tiingoOpts)
-
 	// run in a go rutine because in the subscription, the subscriber is waiting
 	// for msgs
 	ws.Subscribe(ctx)
