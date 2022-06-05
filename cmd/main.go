@@ -1,9 +1,13 @@
 package main
 
 import (
+	"log"
+
 	"markettracker.com/cmd/bootstrap"
 )
 
 func main() {
-	bootstrap.Run()
+	if err := bootstrap.Run(); err != nil {
+		log.Fatal(err)
+	}
 }

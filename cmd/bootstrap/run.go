@@ -30,6 +30,5 @@ func Run() error {
 	ws.Subscribe(ctx)
 	ws.Listen(ctx)
 	s := server.New(c.Host, c.Port)
-	s.Start(ctx)
-	return nil
+	return s.Start(ctx)
 }
