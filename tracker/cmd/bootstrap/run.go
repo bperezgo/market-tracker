@@ -5,8 +5,10 @@ import (
 	"log"
 
 	"markettracker.com/tracker/config"
+	"markettracker.com/tracker/internal/platform/bus/inmemory"
 	"markettracker.com/tracker/internal/platform/server"
 	"markettracker.com/tracker/internal/platform/wspool/wsTiingo"
+	"markettracker.com/tracker/internal/replicate"
 )
 
 func Run() error {
@@ -14,6 +16,8 @@ func Run() error {
 	log.SetFlags(0)
 	ctx := context.Background()
 	c := config.GetConfiguration()
+	eventBus := inmemory.NewEventBus()
+	replicator := replicate.New(eventBus)
 	tiingoOpts := wsTiingo.TiingoOptions{
 		Url: c.TiingoApiUrl,
 		SubEvent: &wsTiingo.SubTiingoOpts{
@@ -24,7 +28,7 @@ func Run() error {
 			},
 		},
 	}
-	ws := wsTiingo.New(ctx, tiingoOpts)
+	ws := wsTiingo.New(ctx, replicator, tiingoOpts)
 	// run in a go rutine because in the subscription, the subscriber is waiting
 	// for msgs
 	ws.Subscribe(ctx)

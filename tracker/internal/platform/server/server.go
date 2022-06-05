@@ -6,25 +6,37 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"markettracker.com/tracker/internal/platform/server/handler"
 )
 
 type Server struct {
 	httpAddr        string
 	shutdownTimeout time.Duration
+	engine          *gin.Engine
 }
 
 func New(host string, port int32) *Server {
 	addr := fmt.Sprintf("%s:%d", host, port)
-	return &Server{
+	srv := &Server{
 		httpAddr:        addr,
 		shutdownTimeout: 10 * time.Second,
 	}
+	srv.registerRoutes()
+	return srv
+}
+
+func (s *Server) registerRoutes() {
+	// TODO: Middlewares to implement: RecoveryMiddleware, LoggingMiddleware
+	s.engine.GET("/health", handler.Health)
 }
 
 func (s *Server) Start(ctx context.Context) error {
 	log.Println("Server running on", s.httpAddr)
 	srv := http.Server{
-		Addr: s.httpAddr,
+		Addr:    s.httpAddr,
+		Handler: s.engine,
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

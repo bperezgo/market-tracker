@@ -1,19 +1,7 @@
 package wsTiingo
 
-import (
-	"markettracker.com/tracker/pkg/wsWrapper"
-	"nhooyr.io/websocket"
-)
-
 type Consumer interface {
 	Publish(interface{})
-}
-
-// TODO: dependency injection strategy
-type WsTiingo struct {
-	conn      *websocket.Conn
-	wsWrapper *wsWrapper.WsWrapper
-	opts      TiingoOptions
 }
 
 type EventDataTiingo struct {

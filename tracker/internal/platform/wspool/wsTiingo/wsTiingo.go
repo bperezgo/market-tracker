@@ -7,21 +7,29 @@ import (
 	"log"
 	"os"
 
-	domain "markettracker.com/tracker/internal"
 	"markettracker.com/tracker/internal/platform/wspool/wsMsg"
+	"markettracker.com/tracker/internal/replicate"
 	"markettracker.com/tracker/pkg/wsWrapper"
 	"nhooyr.io/websocket"
 )
 
+type WsTiingo struct {
+	conn       *websocket.Conn
+	wsWrapper  *wsWrapper.WsWrapper
+	opts       TiingoOptions
+	replicator *replicate.Replicator
+}
+
 // Constructor of WsTiingo
-func New(ctx context.Context, opts TiingoOptions) *WsTiingo {
+func New(ctx context.Context, replicator *replicate.Replicator, opts TiingoOptions) *WsTiingo {
 	dialOps := &websocket.DialOptions{}
 	c, _, _ := websocket.Dial(ctx, opts.Url, dialOps)
 	wsWrapper := wsWrapper.New(16)
 	return &WsTiingo{
-		conn:      c,
-		wsWrapper: wsWrapper,
-		opts:      opts,
+		conn:       c,
+		wsWrapper:  wsWrapper,
+		opts:       opts,
+		replicator: replicator,
 	}
 }
 
@@ -54,10 +62,9 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 			if err := json.Unmarshal(message, tiingoMsg); err != nil {
 				continue
 			}
-			// TODO: Handle the error with more logic if failed
 			marketMsg := wsMsg.TiingoAdapter(tiingoMsg)
 			// Publish to all consumers, that was set in the setup
-			w.publish(marketMsg)
+			w.replicator.Replicate(ctx, marketMsg)
 		}
 	}()
 
@@ -74,10 +81,4 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 		return
 	}
 	<-done
-}
-
-func (w *WsTiingo) publish(marketMsg domain.MarketTrackerMsg) {
-	for _, c := range w.opts.Consumers {
-		c.Publish(marketMsg)
-	}
 }
