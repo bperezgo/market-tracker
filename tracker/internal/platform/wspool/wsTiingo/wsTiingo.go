@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 
+	domain "markettracker.com/tracker/internal"
 	"markettracker.com/tracker/internal/platform/wspool/wsMsg"
 	"markettracker.com/tracker/pkg/wsWrapper"
 	"nhooyr.io/websocket"
@@ -75,7 +76,7 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 	<-done
 }
 
-func (w *WsTiingo) publish(marketMsg *wsMsg.MarketTrackerMsg) {
+func (w *WsTiingo) publish(marketMsg domain.MarketTrackerMsg) {
 	for _, c := range w.opts.Consumers {
 		c.Publish(marketMsg)
 	}

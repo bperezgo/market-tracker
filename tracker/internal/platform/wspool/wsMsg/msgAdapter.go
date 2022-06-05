@@ -1,3 +1,5 @@
 package wsMsg
 
-type IMsgAdapter func(msg *interface{}) MarketTrackerMsg
+import domain "markettracker.com/tracker/internal"
+
+type IMsgAdapter func(msg *interface{}) domain.MarketTrackerMsg

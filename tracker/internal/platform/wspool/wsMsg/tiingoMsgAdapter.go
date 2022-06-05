@@ -3,10 +3,12 @@ package wsMsg
 import (
 	"log"
 	"time"
+
+	domain "markettracker.com/tracker/internal"
 )
 
 // Must implements IMsgAdapter
-func TiingoAdapter(msg *TiingoMsg) *MarketTrackerMsg {
+func TiingoAdapter(msg *TiingoMsg) domain.MarketTrackerMsg {
 	// [Msg Type, Ticker, Date, Exchange, LastSize, LastPrice]
 	var values [6]interface{}
 	for idx, el := range msg.Data {
@@ -18,26 +20,26 @@ func TiingoAdapter(msg *TiingoMsg) *MarketTrackerMsg {
 	}
 	date, ok := values[2].(string)
 	if !ok {
-		return &MarketTrackerMsg{}
+		return domain.MarketTrackerMsg{}
 	}
 	dateTime, err := time.Parse(time.RFC3339, date)
 	if err != nil {
 		log.Println(err)
-		return &MarketTrackerMsg{}
+		return domain.MarketTrackerMsg{}
 	}
 	exchange, ok := values[3].(string)
 	if !ok {
-		return &MarketTrackerMsg{}
+		return domain.MarketTrackerMsg{}
 	}
 	lastSize, ok := values[4].(float64)
 	if !ok {
-		return &MarketTrackerMsg{}
+		return domain.MarketTrackerMsg{}
 	}
 	lastPrice, ok := values[5].(float64)
 	if !ok {
-		return &MarketTrackerMsg{}
+		return domain.MarketTrackerMsg{}
 	}
-	marketData := &MarketTrackerMsg{
+	marketData := domain.MarketTrackerMsg{
 		Ticker:    ticker,
 		Date:      dateTime,
 		Exchange:  exchange,
