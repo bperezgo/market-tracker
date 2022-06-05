@@ -35,7 +35,7 @@ func NewBaseEvent(aggregateId string) BaseEvent {
 	}
 }
 
-func (b BaseEvent) ID() string {
+func (b BaseEvent) Id() string {
 	return b.eventId
 }
 
@@ -43,6 +43,6 @@ func (b BaseEvent) OccurredOn() time.Time {
 	return b.occurredOn
 }
 
-func (b BaseEvent) AggregateID() string {
+func (b BaseEvent) AggregateId() string {
 	return b.aggregateId
 }
