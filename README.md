@@ -2,7 +2,13 @@
 
 ## Description of the project
 
-[websocket tool](https://github.com/nhooyr/websocket)
+It is used a pool connections of websocket, or another information source, to get market data. Can be used any kind of interfaces to get this data. For the moment only websockets, all this data is processed and sent to a data management system, but with a specific structure, to mantain data consistency.
+
+In other words, this market tracker application is a data minner.
+
+But it does not matter if only take data of different sources, the important thing is doing something with this data. So, all the gathered data will be sent to a system with ML or other system to analyze the data (In a next iteration)
+
+It will be used the next [websocket tool](https://github.com/nhooyr/websocket) because is light, and accomplish all the needs of this project, at least to take the data, provisioned in the websoket apis.
 
 ## Setup the project
 
