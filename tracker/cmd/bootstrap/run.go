@@ -16,7 +16,8 @@ func Run() error {
 	log.SetFlags(0)
 	ctx := context.Background()
 	c := config.GetConfiguration()
-	eventBus := kafka.NewEventBus()
+	// TODO: define configuration of the kafka bus
+	eventBus := kafka.NewEventBus([]string{""}, "")
 	replicator := replicate.New(eventBus)
 	tiingoOpts := wsTiingo.TiingoOptions{
 		Url: c.TiingoApiUrl,
