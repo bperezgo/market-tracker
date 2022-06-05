@@ -10,6 +10,7 @@ import (
 	"markettracker.com/tracker/pkg/event"
 )
 
+// TODO: Change the strategy to use the events array with many queues of kafka
 type EventBus struct {
 	writer   *kafka.Writer
 	clientID string
