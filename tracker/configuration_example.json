@@ -1,13 +1,14 @@
 {
-    "Port": 3000,
-    "Host": "http://localhost",
-    "TiingoApiToken": "some super secret key",
-    "TiingoApiUrl": "wss://api.tiingo.com/crypto",
-    "Events": [
-        {
-            "Type": "",
-            "Brokers": [""],
-            "Topic": ""
-        }
-    ]
+  "Port": 3000,
+  "Host": "http://localhost",
+  "TiingoApiToken": "some super secret key",
+  "TiingoApiUrl": "wss://api.tiingo.com/crypto",
+  "Events": [
+    {
+      "Type": "",
+      "BrokerBootstrapAddr": "localhost:19092",
+      "Brokers": ["1", "2", "3"],
+      "Topic": ""
+    }
+  ]
 }

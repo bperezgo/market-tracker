@@ -17,7 +17,7 @@ func Run() error {
 	ctx := context.Background()
 	c := config.GetConfiguration()
 	// TODO: define strategy of initialization of different kafka channels
-	eventBus := kafka.NewEventBus(c.Events[0].Brokers, c.Events[0].Topic)
+	eventBus := kafka.NewEventBus(c.Events[0].BootstrapBrokerAddr, c.Events[0].Brokers, c.Events[0].Topic)
 	replicator := replicate.New(eventBus)
 	tiingoOpts := wsTiingo.TiingoOptions{
 		Url: c.TiingoApiUrl,

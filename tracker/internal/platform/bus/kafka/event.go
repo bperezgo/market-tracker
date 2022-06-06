@@ -16,11 +16,13 @@ type EventBus struct {
 	clientID string
 }
 
-func NewEventBus(brokers []string, topic string) *EventBus {
+func NewEventBus(bootstrapBrokerAddr string, brokers []string, topic string) *EventBus {
 	clientID := uuid.New().String()
+	localAddr := kafka.TCP(bootstrapBrokerAddr)
 	dialer := &kafka.Dialer{
-		Timeout:  10 * time.Second,
-		ClientID: clientID,
+		Timeout:   10 * time.Second,
+		ClientID:  clientID,
+		LocalAddr: localAddr,
 	}
 	c := kafka.WriterConfig{
 		Brokers:          brokers,

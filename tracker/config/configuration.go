@@ -15,9 +15,10 @@ type Configuration struct {
 }
 
 type Event struct {
-	Type    string
-	Brokers []string
-	Topic   string
+	Type                string
+	BootstrapBrokerAddr string
+	Brokers             []string
+	Topic               string
 }
 
 var configuration *Configuration

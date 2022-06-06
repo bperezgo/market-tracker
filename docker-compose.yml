@@ -1,77 +1,108 @@
 ---
-version: '2'
+version: '3.1'
+
+networks:
+  app-tier:
+    driver: bridge
+
 services:
-  zk1:
-    image: confluentinc/cp-zookeeper:5.3.0
+  zoo1:
+    image: bitnami/zookeeper:3.8.0
+    restart: always
+    hostname: zoo1
+    networks:
+      - app-tier
     ports:
-      - "22181:22181"
+      - 22181:2181
     environment:
-      ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: 22181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-      ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+      ZOO_SERVER_ID: 1
+      ZOO_TICK_TIME: 2000
+      ZOO_INIT_LIMIT: 5
+      ZOO_SYNC_LIMIT: 2
+      ZOO_SERVERS: zoo1:2888:3888::1,zoo2:2888:3888::2,zoo3:2888:3888::3
 
-  zk2:
-    image: confluentinc/cp-zookeeper:5.3.0
+  zoo2:
+    image: bitnami/zookeeper:3.8.0
+    restart: always
+    hostname: zoo2
+    networks:
+      - app-tier
     ports:
-      - "32181:32181"
+      - 32181:2181
     environment:
-      ZOOKEEPER_SERVER_ID: 2
-      ZOOKEEPER_CLIENT_PORT: 32181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-      ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+      ZOO_SERVER_ID: 2
+      ZOO_TICK_TIME: 2000
+      ZOO_INIT_LIMIT: 5
+      ZOO_SYNC_LIMIT: 2
+      ZOO_SERVERS: zoo1:2888:3888::1,zoo2:2888:3888::2,zoo3:2888:3888::3
 
-  zk3:
-    image: confluentinc/cp-zookeeper:5.3.0
+  zoo3:
+    image: bitnami/zookeeper:3.8.0
+    restart: always
+    hostname: zoo3
+    networks:
+      - app-tier
     ports:
-      - "42181:42181"
+      - 42181:2181
     environment:
-      ZOOKEEPER_SERVER_ID: 3
-      ZOOKEEPER_CLIENT_PORT: 42181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-      ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
-
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+      ZOO_SERVER_ID: 3
+      ZOO_TICK_TIME: 2000
+      ZOO_INIT_LIMIT: 5
+      ZOO_SYNC_LIMIT: 2
+      ZOO_SERVERS: zoo1:2888:3888::1,zoo2:2888:3888::2,zoo3:2888:3888::3
   kafka-1:
-    image: confluentinc/cp-kafka:5.3.0
+    image: bitnami/kafka:3.0.1
+    hostname: kafka-1
+    networks:
+      - app-tier
     ports:
-      - "19092:19092"
+      - "19092:9092"
     depends_on:
-      - zk1
-      - zk2
-      - zk3
+      - zoo1
+      - zoo2
+      - zoo3
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: ${MY_IP}:22181,${MY_IP}:32181,${MY_IP}:42181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${MY_IP}:19092
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zoo1:22181,zoo2:32181,zoo3:42181
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://${MY_IP}:9092
 
   kafka-2:
-    image: confluentinc/cp-kafka:5.3.0
+    image: bitnami/kafka:3.0.1
+    hostname: kafka-2
+    networks:
+      - app-tier
     ports:
-      - "29092:29092"
+      - "29092:9092"
     depends_on:
-      - zk1
-      - zk2
-      - zk3
+      - zoo1
+      - zoo2
+      - zoo3
     environment:
       KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: ${MY_IP}:22181,${MY_IP}:32181,${MY_IP}:42181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${MY_IP}:29092
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zoo1:22181,zoo2:32181,zoo3:42181
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://${MY_IP}:9092
 
   kafka-3:
-    image: confluentinc/cp-kafka:5.3.0
+    image: bitnami/kafka:3.0.1
+    hostname: kafka-3
+    networks:
+      - app-tier
     ports:
-      - "39092:39092"
+      - "39092:9092"
     depends_on:
-      - zk1
-      - zk2
-      - zk3
+      - zoo1
+      - zoo2
+      - zoo3
     environment:
       KAFKA_BROKER_ID: 3
-      KAFKA_ZOOKEEPER_CONNECT: ${MY_IP}:22181,${MY_IP}:32181,${MY_IP}:42181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${MY_IP}:39092
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zoo1:22181,zoo2:32181,zoo3:42181
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://${MY_IP}:9092
