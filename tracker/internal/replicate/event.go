@@ -8,6 +8,7 @@ import (
 
 type Exchange string
 
+// TODO: review if it is better inject this event from the NewAssetRecordedEvent
 const AssetRecordedEventType event.Type = "events.asset.recorded"
 
 type AssetRecordedEvent struct {
