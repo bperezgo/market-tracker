@@ -6,7 +6,7 @@
   "Events": [
     {
       "Type": "",
-      "BrokerBootstrapAddr": "localhost:19092",
+      "BrokerBootstrapAddr": "localhost:9092",
       "Brokers": ["1", "2", "3"],
       "Topic": ""
     }

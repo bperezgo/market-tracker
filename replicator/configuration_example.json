@@ -1,0 +1,11 @@
+{
+    "Host": "http://localhost",
+    "Events": [
+        {
+            "Type": "",
+            "BrokerBootstrapAddr": "localhost:9092",
+            "Brokers": ["1"],
+            "Topic": ""
+        }
+    ]
+}
