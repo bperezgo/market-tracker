@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,6 +14,8 @@ import (
 // TODO: Change the strategy to use the events array with many queues of kafka
 type EventBus struct {
 	writer   *kafka.Writer
+	topic    string
+	brokers  []string
 	clientID string
 }
 
@@ -35,7 +38,9 @@ func NewEventBus(bootstrapBrokerAddr string, brokers []string, topic string) *Ev
 	}
 
 	return &EventBus{
-		writer: kafka.NewWriter(c),
+		writer:  kafka.NewWriter(c),
+		topic:   topic,
+		brokers: brokers,
 	}
 }
 
@@ -50,6 +55,12 @@ func (eb *EventBus) Publish(ctx context.Context, events []event.Event) error {
 	return nil
 }
 
-func (EventBus) encondeMessage(event event.Event) (kafka.Message, error) {
-	return kafka.Message{}, nil
+func (eb *EventBus) encondeMessage(event event.Event) (kafka.Message, error) {
+	m, err := json.Marshal(event)
+	if err != nil {
+		return kafka.Message{}, err
+	}
+	return kafka.Message{
+		Value: m,
+	}, nil
 }
