@@ -3,6 +3,7 @@ package kafka
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,15 +14,20 @@ import (
 
 // TODO: Change the strategy to use the events array with many queues of kafka
 type EventBus struct {
+	client   *kafka.Conn
 	writer   *kafka.Writer
 	topic    string
 	brokers  []string
 	clientID string
 }
 
-func NewEventBus(bootstrapBrokerAddr string, brokers []string, topic string) *EventBus {
+func NewEventBus(bootstrapBrokerAddr string, brokers []string, topic string) (*EventBus, error) {
 	clientID := uuid.New().String()
 	localAddr := kafka.TCP(bootstrapBrokerAddr)
+	conn, err := kafka.DialLeader(context.Background(), "tcp", bootstrapBrokerAddr, topic, 0)
+	if err != nil {
+		return nil, err
+	}
 	dialer := &kafka.Dialer{
 		Timeout:   10 * time.Second,
 		ClientID:  clientID,
@@ -38,19 +44,22 @@ func NewEventBus(bootstrapBrokerAddr string, brokers []string, topic string) *Ev
 	}
 
 	return &EventBus{
+		client:  conn,
 		writer:  kafka.NewWriter(c),
 		topic:   topic,
 		brokers: brokers,
-	}
+	}, nil
 }
 
 func (eb *EventBus) Publish(ctx context.Context, events []event.Event) error {
 	for _, event := range events {
+		log.Println("[INFO] publishing event with id ", event.AggregateId())
 		message, err := eb.encondeMessage(event)
 		if err != nil {
 			return err
 		}
-		return eb.writer.WriteMessages(ctx, message)
+		_, err = eb.client.WriteMessages(message)
+		return err
 	}
 	return nil
 }
@@ -61,6 +70,7 @@ func (eb *EventBus) encondeMessage(event event.Event) (kafka.Message, error) {
 		return kafka.Message{}, err
 	}
 	return kafka.Message{
+		Key:   []byte("string"),
 		Value: m,
 	}, nil
 }

@@ -4,7 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"markettracker.com/tracker/pkg/event"
 )
 
@@ -15,8 +17,9 @@ type DummyEvent struct {
 }
 
 func NewDummyEvent() DummyEvent {
+	aggregateId := uuid.NewString()
 	return DummyEvent{
-		BaseEvent: event.NewBaseEvent(""),
+		BaseEvent: event.NewBaseEvent(aggregateId),
 	}
 }
 
@@ -25,9 +28,10 @@ func (DummyEvent) Type() event.Type {
 }
 
 func Test_Ok_Publish_A_Market_Asset_Message_To_Kafka_Broker(t *testing.T) {
-	kafkaPublisher := NewEventBus("localhost:19092", []string{"1", "2", "3"}, "events.dummy.type")
+	kafkaPublisher, err := NewEventBus("localhost:9092", []string{"1", "2", "3"}, "events.dummy.type")
+	require.NoError(t, err, "no connected")
 	ctx := context.Background()
 	dummyEvent := NewDummyEvent()
-	err := kafkaPublisher.Publish(ctx, []event.Event{dummyEvent})
+	err = kafkaPublisher.Publish(ctx, []event.Event{dummyEvent})
 	assert.NoError(t, err, "error was not expected")
 }

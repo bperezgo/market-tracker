@@ -21,16 +21,19 @@ type WsTiingo struct {
 }
 
 // Constructor of WsTiingo
-func New(ctx context.Context, replicator *replicate.Replicator, opts TiingoOptions) *WsTiingo {
+func New(ctx context.Context, replicator *replicate.Replicator, opts TiingoOptions) (*WsTiingo, error) {
 	dialOps := &websocket.DialOptions{}
-	c, _, _ := websocket.Dial(ctx, opts.Url, dialOps)
+	c, _, err := websocket.Dial(ctx, opts.Url, dialOps)
+	if err != nil {
+		return nil, fmt.Errorf("failed connecting to kafka broker; %s", err.Error())
+	}
 	wsWrapper := wsWrapper.New(16)
 	return &WsTiingo{
 		conn:       c,
 		wsWrapper:  wsWrapper,
 		opts:       opts,
 		replicator: replicator,
-	}
+	}, nil
 }
 
 func (w *WsTiingo) Close() error {
@@ -62,7 +65,11 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 			if err := json.Unmarshal(message, tiingoMsg); err != nil {
 				continue
 			}
-			marketMsg := wsMsg.TiingoAdapter(tiingoMsg)
+			marketMsg, err := wsMsg.TiingoAdapter(tiingoMsg)
+			if err != nil {
+				log.Println("[ERROR] failed adapting the message;", err)
+				continue
+			}
 			// Publish to all consumers, that was set in the setup
 			w.replicator.Replicate(ctx, marketMsg)
 		}

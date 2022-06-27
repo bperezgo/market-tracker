@@ -17,7 +17,10 @@ func Run() error {
 	ctx := context.Background()
 	c := config.GetConfiguration()
 	// TODO: define strategy of initialization of different kafka channels
-	eventBus := kafka.NewEventBus(c.Events[0].BootstrapBrokerAddr, c.Events[0].Brokers, c.Events[0].Topic)
+	eventBus, err := kafka.NewEventBus(c.Events[0].BootstrapBrokerAddr, c.Events[0].Brokers, c.Events[0].Topic)
+	if err != nil {
+		return err
+	}
 	replicator := replicate.New(eventBus)
 	tiingoOpts := wsTiingo.TiingoOptions{
 		Url: c.TiingoApiUrl,
@@ -29,7 +32,10 @@ func Run() error {
 			},
 		},
 	}
-	ws := wsTiingo.New(ctx, replicator, tiingoOpts)
+	ws, err := wsTiingo.New(ctx, replicator, tiingoOpts)
+	if err != nil {
+		return err
+	}
 	// run in a go rutine because in the subscription, the subscriber is waiting
 	// for msgs
 	ws.Subscribe(ctx)

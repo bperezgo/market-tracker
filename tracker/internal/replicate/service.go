@@ -2,6 +2,7 @@ package replicate
 
 import (
 	"context"
+	"log"
 
 	"github.com/google/uuid"
 	domain "markettracker.com/tracker/internal"
@@ -21,6 +22,7 @@ func New(eventBus event.Bus) *Replicator {
 }
 
 func (a *Replicator) Replicate(ctx context.Context, marketMsg domain.MarketTrackerDTO) error {
+	log.Printf("[INFO] replicating the message with ticker '%s'", marketMsg.Ticker)
 	aggregateId := uuid.New().String()
 	assetRecorded, err := NewAssetRecordedEvent(aggregateId, marketMsg.Date, marketMsg.Exchange, marketMsg.LastPrice)
 	if err != nil {
