@@ -8,16 +8,19 @@ import (
 	"os/signal"
 	"syscall"
 
-	domain "markettracker.com/replicator/internal"
+	"markettracker.com/pkg/event"
 	"markettracker.com/replicator/internal/config"
 	"markettracker.com/replicator/internal/platform/consumer/kafka"
 )
 
 func Run() error {
 	c := config.GetConfiguration()
-	chMsg := make(chan domain.Message)
+	chMsg := make(chan event.EventDTO)
 	chErr := make(chan error)
-	consumer := kafka.NewConsumer(c.Events[0].Brokers, c.Events[0].Topic)
+	consumer, err := kafka.NewConsumer(c.Events[0].BootstrapBrokerAddr, c.Events[0].Topic, c.Events[0].ConsumerGroup)
+	if err != nil {
+		return err
+	}
 
 	go func() {
 		consumer.Read(context.Background(), chMsg, chErr)
@@ -37,6 +40,6 @@ func Run() error {
 	}
 end:
 
-	fmt.Println("\nyou have abandoned the room")
+	fmt.Println("\nconsumer is finished")
 	return nil
 }
