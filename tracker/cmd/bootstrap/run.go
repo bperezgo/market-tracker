@@ -38,7 +38,10 @@ func Run() error {
 	}
 	// run in a go rutine because in the subscription, the subscriber is waiting
 	// for msgs
-	ws.Subscribe(ctx)
+	err = ws.Subscribe(ctx)
+	if err != nil {
+		return err
+	}
 	ws.Listen(ctx)
 	s := server.New(c.Host, c.Port)
 	return s.Start(ctx)

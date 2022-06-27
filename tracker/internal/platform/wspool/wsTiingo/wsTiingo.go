@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 
+	domain "markettracker.com/tracker/internal"
 	"markettracker.com/tracker/internal/platform/wspool/wsMsg"
 	"markettracker.com/tracker/internal/replicate"
 	"markettracker.com/tracker/pkg/wsWrapper"
@@ -42,12 +43,13 @@ func (w *WsTiingo) Close() error {
 }
 
 // Subscribe methos will connect with the respective ws api
-func (w *WsTiingo) Subscribe(ctx context.Context) {
+func (w *WsTiingo) Subscribe(ctx context.Context) error {
 	// Subscription to the api
 	msg, err := json.Marshal(w.opts.SubEvent)
 	if err = w.conn.Write(ctx, websocket.MessageText, msg); err != nil {
-		// TODO: Is it necesary to panic in this part if some websocket failed?
+		return err
 	}
+	return nil
 }
 
 func (w *WsTiingo) Listen(ctx context.Context) {
@@ -61,11 +63,7 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 			if err != nil {
 				continue
 			}
-			tiingoMsg := &wsMsg.TiingoMsg{}
-			if err := json.Unmarshal(message, tiingoMsg); err != nil {
-				continue
-			}
-			marketMsg, err := wsMsg.TiingoAdapter(tiingoMsg)
+			marketMsg, err := createAssetDTO(message)
 			if err != nil {
 				log.Println("[ERROR] failed adapting the message;", err)
 				continue
@@ -86,4 +84,16 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 		return
 	}
 	<-done
+}
+
+func createAssetDTO(message []byte) (domain.AssetDTO, error) {
+	tiingoMsg := &wsMsg.TiingoMsg{}
+	if err := json.Unmarshal(message, tiingoMsg); err != nil {
+		return domain.AssetDTO{}, err
+	}
+	marketMsg, err := wsMsg.TiingoAdapter(tiingoMsg)
+	if err != nil {
+		return domain.AssetDTO{}, err
+	}
+	return marketMsg, nil
 }
