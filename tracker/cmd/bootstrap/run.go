@@ -17,7 +17,7 @@ func Run() error {
 	ctx := context.Background()
 	c := config.GetConfiguration()
 	// TODO: define strategy of initialization of different kafka channels
-	eventBus, err := kafka.NewEventBus(c.Events[0].BootstrapBrokerAddr, c.Events[0].Brokers, c.Events[0].Topic)
+	eventBus, err := kafka.NewEventBus(c.Events[0].BootstrapBrokerAddr, c.Events[0].Topic)
 	if err != nil {
 		return err
 	}

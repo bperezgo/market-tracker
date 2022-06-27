@@ -28,7 +28,7 @@ func (DummyEvent) Type() event.Type {
 }
 
 func Test_Ok_Publish_A_Market_Asset_Message_To_Kafka_Broker(t *testing.T) {
-	kafkaPublisher, err := NewEventBus("localhost:9092", []string{"1", "2", "3"}, "events.dummy.type")
+	kafkaPublisher, err := NewEventBus("localhost:9092", "events.dummy.type")
 	require.NoError(t, err, "no connected")
 	ctx := context.Background()
 	dummyEvent := NewDummyEvent()
