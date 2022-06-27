@@ -13,12 +13,12 @@ const AssetRecordedEventType event.Type = "events.asset.recorded"
 
 type AssetRecordedEvent struct {
 	event.BaseEvent
-	Data Data
+	Data Data `json:"data"`
 }
 type Data struct {
-	Date     time.Time
-	Exchange Exchange
-	Price    float32
+	Date     time.Time `json:"date"`
+	Exchange Exchange  `json:"exchange"`
+	Price    float32   `json:"price"`
 }
 
 func NewAssetRecordedEvent(id string, date time.Time, exchange string, price float32) (AssetRecordedEvent, error) {
