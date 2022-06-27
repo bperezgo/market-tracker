@@ -21,10 +21,10 @@ func New(eventBus event.Bus) *Replicator {
 	}
 }
 
-func (a *Replicator) Replicate(ctx context.Context, marketMsg domain.MarketTrackerDTO) error {
-	log.Printf("[INFO] replicating the message with ticker '%s'", marketMsg.Ticker)
+func (a *Replicator) Replicate(ctx context.Context, marketMsg domain.AssetDTO) error {
+	log.Printf("[INFO] replicating the message with exchanger '%s'", marketMsg.Exchange)
 	aggregateId := uuid.New().String()
-	assetRecorded, err := NewAssetRecordedEvent(aggregateId, marketMsg.Date, marketMsg.Exchange, marketMsg.LastPrice)
+	assetRecorded, err := NewAssetRecordedEvent(aggregateId, marketMsg.Date, marketMsg.Exchange, marketMsg.Price)
 	if err != nil {
 		return err
 	}

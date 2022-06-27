@@ -1,9 +1,5 @@
 package wsTiingo
 
-type Consumer interface {
-	Publish(interface{})
-}
-
 type EventDataTiingo struct {
 	ThresholdLevel int `json:"thresholdLevel"`
 }
@@ -15,7 +11,6 @@ type SubTiingoOpts struct {
 }
 
 type TiingoOptions struct {
-	Url       string
-	SubEvent  *SubTiingoOpts
-	Consumers []Consumer
+	Url      string
+	SubEvent *SubTiingoOpts
 }
