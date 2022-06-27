@@ -14,11 +14,20 @@ type Bus interface {
 // Type represents a domain event type.
 type Type string
 
+type EventDTO struct {
+	EventId     string
+	AggregateId string
+	OccurredOn  time.Time
+	Type        string
+}
+
 type Event interface {
 	Id() string
 	AggregateId() string
 	OccurredOn() time.Time
 	Type() Type
+	// Method to get the event with the struct necessary to be sent
+	DTO() interface{}
 }
 
 type BaseEvent struct {

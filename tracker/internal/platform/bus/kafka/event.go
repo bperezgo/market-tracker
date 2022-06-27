@@ -42,7 +42,7 @@ func (eb *EventBus) Publish(ctx context.Context, events []event.Event) error {
 }
 
 func (eb *EventBus) encondeMessage(event event.Event) (kafka.Message, error) {
-	m, err := json.Marshal(event)
+	m, err := json.Marshal(event.DTO())
 	if err != nil {
 		return kafka.Message{}, err
 	}

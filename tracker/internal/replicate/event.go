@@ -11,9 +11,14 @@ type Exchange string
 // TODO: review if it is better inject this event from the NewAssetRecordedEvent
 const AssetRecordedEventType event.Type = "events.asset.recorded"
 
+type AssetRecordedEventDTO struct {
+	event.EventDTO
+	Data Data `json:"data"`
+}
+
 type AssetRecordedEvent struct {
 	event.BaseEvent
-	Data Data `json:"data"`
+	Data Data
 }
 type Data struct {
 	Date     time.Time `json:"date"`
@@ -34,4 +39,16 @@ func NewAssetRecordedEvent(id string, date time.Time, exchange string, price flo
 
 func (AssetRecordedEvent) Type() event.Type {
 	return AssetRecordedEventType
+}
+
+func (ar AssetRecordedEvent) DTO() interface{} {
+	return &AssetRecordedEventDTO{
+		EventDTO: event.EventDTO{
+			EventId:     ar.Id(),
+			AggregateId: ar.AggregateId(),
+			OccurredOn:  ar.OccurredOn(),
+			Type:        string(ar.Type()),
+		},
+		Data: ar.Data,
+	}
 }

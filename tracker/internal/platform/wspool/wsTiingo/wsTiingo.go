@@ -70,7 +70,6 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 				log.Println("[ERROR] failed adapting the message;", err)
 				continue
 			}
-			// Publish to all consumers, that was set in the setup
 			w.replicator.Replicate(ctx, marketMsg)
 		}
 	}()
@@ -81,7 +80,6 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 	case <-done:
 		return
 	}
-	fmt.Println("message2")
 	err := w.conn.Close(websocket.StatusNormalClosure, "")
 	if err != nil {
 		log.Println("write close:", err)
