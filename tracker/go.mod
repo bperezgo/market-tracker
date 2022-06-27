@@ -9,6 +9,7 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
+	markettracker.com/pkg v0.0.0
 	nhooyr.io/websocket v1.8.7
 )
 
@@ -36,3 +37,5 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20220512140231-539c8e751b99 // indirect
 )
+
+replace markettracker.com/pkg v0.0.0 => ../pkg

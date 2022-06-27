@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	domain "markettracker.com/replicator"
+	domain "markettracker.com/replicator/internal"
 	"markettracker.com/replicator/internal/config"
 	"markettracker.com/replicator/internal/platform/consumer/kafka"
 )

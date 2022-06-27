@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"markettracker.com/tracker/pkg/event"
+	"markettracker.com/pkg/event"
 )
 
 const DummyType = event.Type("events.dummy.tested")

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
-	domain "markettracker.com/replicator"
+	domain "markettracker.com/replicator/internal"
 )
 
 type consumer struct {

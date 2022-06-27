@@ -3,7 +3,7 @@ package replicate
 import (
 	"time"
 
-	"markettracker.com/tracker/pkg/event"
+	"markettracker.com/pkg/event"
 )
 
 type Exchange string

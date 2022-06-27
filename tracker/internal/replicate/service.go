@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/google/uuid"
+	"markettracker.com/pkg/event"
 	domain "markettracker.com/tracker/internal"
-	"markettracker.com/tracker/pkg/event"
 )
 
 // This service take the data from the real data source, and is returned a desired structure

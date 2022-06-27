@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/segmentio/kafka-go"
-	"markettracker.com/tracker/pkg/event"
+	"markettracker.com/pkg/event"
 )
 
 // TODO: Change the strategy to use the events array with many queues of kafka
