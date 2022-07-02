@@ -1,4 +1,4 @@
-package wsTiingo
+package tiingo
 
 type EventDataTiingo struct {
 	ThresholdLevel int `json:"thresholdLevel"`

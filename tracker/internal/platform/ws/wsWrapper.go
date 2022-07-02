@@ -1,7 +1,7 @@
-// WsWrapper: wrapper of websocket
+// ws: wrapper of websocket
 // The next code was based from the code
 // https://github.com/nhooyr/websocket/blob/master/examples/chat/chat.go
-package wsWrapper
+package ws
 
 import (
 	"context"

@@ -1,8 +1,9 @@
-package wsWrapper
+package ws
 
 import (
 	"context"
 
+	domain "markettracker.com/tracker/internal"
 	"nhooyr.io/websocket"
 )
 
@@ -11,6 +12,10 @@ type IWsWrapper interface {
 	Unsubscribe(conn *websocket.Conn, event string) error
 	Publish(message interface{}) error
 	Close() error
+}
+
+type MessageAdapter interface {
+	Adapt(message interface{}) domain.AssetDTO
 }
 
 type Subscriber struct {

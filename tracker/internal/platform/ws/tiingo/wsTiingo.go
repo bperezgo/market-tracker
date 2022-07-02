@@ -1,4 +1,4 @@
-package wsTiingo
+package tiingo
 
 import (
 	"context"
@@ -9,17 +9,17 @@ import (
 
 	"github.com/google/uuid"
 	domain "markettracker.com/tracker/internal"
-	"markettracker.com/tracker/internal/platform/wspool/wsMsg"
+	"markettracker.com/tracker/internal/platform/ws"
 	"markettracker.com/tracker/internal/replicate"
-	"markettracker.com/tracker/pkg/wsWrapper"
 	"nhooyr.io/websocket"
 )
 
 type WsTiingo struct {
 	conn       *websocket.Conn
-	wsWrapper  *wsWrapper.WsWrapper
+	wsWrapper  *ws.WsWrapper
 	opts       TiingoOptions
 	replicator *replicate.Replicator
+	adapter    ws.MessageAdapter
 }
 
 // Constructor of WsTiingo
@@ -27,9 +27,9 @@ func New(ctx context.Context, replicator *replicate.Replicator, opts TiingoOptio
 	dialOps := &websocket.DialOptions{}
 	c, _, err := websocket.Dial(ctx, opts.Url, dialOps)
 	if err != nil {
-		return nil, fmt.Errorf("failed connecting to kafka broker; %s", err.Error())
+		return nil, fmt.Errorf("failed connecting to websocket; %s", err.Error())
 	}
-	wsWrapper := wsWrapper.New(16)
+	wsWrapper := ws.New(16)
 	return &WsTiingo{
 		conn:       c,
 		wsWrapper:  wsWrapper,
@@ -64,7 +64,8 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 			if err != nil {
 				continue
 			}
-			marketMsg, err := createAssetDTO(message)
+			tiingoMsg := &TiingoMsg{}
+			marketMsg, err := w.createAssetDTO(message, tiingoMsg)
 			if err != nil {
 				log.Println("[ERROR] failed adapting the message;", err)
 				continue
@@ -87,12 +88,11 @@ func (w *WsTiingo) Listen(ctx context.Context) {
 	<-done
 }
 
-func createAssetDTO(message []byte) (domain.AssetDTO, error) {
-	tiingoMsg := &wsMsg.TiingoMsg{}
-	if err := json.Unmarshal(message, tiingoMsg); err != nil {
+func (w *WsTiingo) createAssetDTO(message []byte, v *TiingoMsg) (domain.AssetDTO, error) {
+	if err := json.Unmarshal(message, v); err != nil {
 		return domain.AssetDTO{}, err
 	}
-	marketMsg, err := wsMsg.TiingoAdapter(tiingoMsg)
+	marketMsg, err := TiingoAdapter(v)
 	if err != nil {
 		return domain.AssetDTO{}, err
 	}

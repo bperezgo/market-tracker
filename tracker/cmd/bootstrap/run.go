@@ -7,7 +7,7 @@ import (
 	"markettracker.com/tracker/config"
 	"markettracker.com/tracker/internal/platform/bus/kafka"
 	"markettracker.com/tracker/internal/platform/server"
-	"markettracker.com/tracker/internal/platform/wspool/wsTiingo"
+	"markettracker.com/tracker/internal/platform/ws/tiingo"
 	"markettracker.com/tracker/internal/replicate"
 )
 
@@ -22,17 +22,17 @@ func Run() error {
 		return err
 	}
 	replicator := replicate.New(eventBus)
-	tiingoOpts := wsTiingo.TiingoOptions{
+	tiingoOpts := tiingo.TiingoOptions{
 		Url: c.TiingoApiUrl,
-		SubEvent: &wsTiingo.SubTiingoOpts{
+		SubEvent: &tiingo.SubTiingoOpts{
 			EventName:     "subscribe",
 			Authorization: c.TiingoApiToken,
-			EventData: &wsTiingo.EventDataTiingo{
+			EventData: &tiingo.EventDataTiingo{
 				ThresholdLevel: 5,
 			},
 		},
 	}
-	ws, err := wsTiingo.New(ctx, replicator, tiingoOpts)
+	ws, err := tiingo.New(ctx, replicator, tiingoOpts)
 	if err != nil {
 		return err
 	}

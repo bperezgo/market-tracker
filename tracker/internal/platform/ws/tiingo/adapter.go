@@ -1,4 +1,4 @@
-package wsMsg
+package tiingo
 
 import (
 	"fmt"
@@ -7,6 +7,14 @@ import (
 
 	domain "markettracker.com/tracker/internal"
 )
+
+// TiingoMsg interface of the tiingo api in the websocket
+type TiingoMsg struct {
+	MsgType string `json:"messageType"`
+	Service string `json:"service"`
+	// is an array with [Msg Type, Ticker, Date, Exchange, LastSize, LastPrice]
+	Data [6]interface{} `json:"data"`
+}
 
 // Must implements IMsgAdapter
 // TODO: The validations here are part of the domain. Refactor to domain
