@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/google/uuid"
 	domain "markettracker.com/tracker/internal"
 	"markettracker.com/tracker/internal/platform/wspool/wsMsg"
 	"markettracker.com/tracker/internal/replicate"
@@ -95,5 +96,7 @@ func createAssetDTO(message []byte) (domain.AssetDTO, error) {
 	if err != nil {
 		return domain.AssetDTO{}, err
 	}
+	aggregateId := uuid.New().String()
+	marketMsg.ID = aggregateId
 	return marketMsg, nil
 }

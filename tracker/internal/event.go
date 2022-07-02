@@ -1,4 +1,4 @@
-package replicate
+package domain
 
 import (
 	"time"
@@ -26,7 +26,7 @@ type Data struct {
 	Price    float32   `json:"price"`
 }
 
-func NewAssetRecordedEvent(id string, date time.Time, exchange string, price float32) (AssetRecordedEvent, error) {
+func NewAssetRecordedEvent(id string, date time.Time, exchange string, price float32) AssetRecordedEvent {
 	return AssetRecordedEvent{
 		BaseEvent: event.NewBaseEvent(id),
 		Data: Data{
@@ -34,7 +34,7 @@ func NewAssetRecordedEvent(id string, date time.Time, exchange string, price flo
 			Exchange: Exchange(exchange),
 			Price:    price,
 		},
-	}, nil
+	}
 }
 
 func (AssetRecordedEvent) Type() event.Type {

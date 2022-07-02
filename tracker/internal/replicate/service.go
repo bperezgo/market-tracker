@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/google/uuid"
 	"markettracker.com/pkg/event"
 	domain "markettracker.com/tracker/internal"
 )
@@ -23,10 +22,9 @@ func New(eventBus event.Bus) *Replicator {
 
 func (a *Replicator) Replicate(ctx context.Context, marketMsg domain.AssetDTO) error {
 	log.Printf("[INFO] replicating the message with exchanger '%s'", marketMsg.Exchange)
-	aggregateId := uuid.New().String()
-	assetRecorded, err := NewAssetRecordedEvent(aggregateId, marketMsg.Date, marketMsg.Exchange, marketMsg.Price)
+	asset, err := domain.NewAsset(marketMsg)
 	if err != nil {
 		return err
 	}
-	return a.eventBus.Publish(ctx, []event.Event{assetRecorded})
+	return a.eventBus.Publish(ctx, asset.PullEvents())
 }
