@@ -21,6 +21,8 @@ func NewEventBus(bootstrapBrokerAddr string, topic string) (*EventBus, error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO: Review this implementation of https://github.com/friendsofgo/kafka-example/blob/master/pkg/kafka/publisher.go
+	// and use the defer conn.Close()
 
 	return &EventBus{
 		client: conn,
