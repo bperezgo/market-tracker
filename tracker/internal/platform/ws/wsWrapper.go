@@ -96,13 +96,3 @@ func (w *Ws) listen(ctx context.Context) {
 	}
 	<-done
 }
-
-// TODO: Unsubscribe deletes a connection when is required
-func (w *Ws) Unsubscribe(event string) error {
-	return nil
-}
-
-// TODO: This publish method only works for chat server. It is necessary to define it
-// for send messages depending on the event of the index of the market
-func (w *Ws) Publish(msg []byte) {
-}
