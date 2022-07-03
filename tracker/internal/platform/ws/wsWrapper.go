@@ -18,7 +18,8 @@ import (
 )
 
 type Opts struct {
-	Url string
+	Url               string
+	SubscriptionEvent interface{}
 }
 
 // used to generalize the subscription to different websockets
@@ -38,6 +39,9 @@ func New(ctx context.Context, messageAdapter MessageAdapter, commandBus command.
 	if err != nil {
 		return nil, fmt.Errorf("failed connecting to websocket; %s", err.Error())
 	}
+	if opts.SubscriptionEvent == nil {
+		return nil, fmt.Errorf("Opts.SubscriptionEvent is nil")
+	}
 	return &Ws{
 		messageAdapter: messageAdapter,
 		commandBus:     commandBus,
@@ -50,8 +54,8 @@ func New(ctx context.Context, messageAdapter MessageAdapter, commandBus command.
 // Subscribe methos will connect with the respective ws api
 //
 // subEvent is the subscription event needed to connect to the websocket
-func (w *Ws) Subscribe(ctx context.Context, subEvent interface{}) error {
-	msg, err := json.Marshal(subEvent)
+func (w *Ws) Subscribe(ctx context.Context) error {
+	msg, err := json.Marshal(w.opts.SubscriptionEvent)
 	if err = w.conn.Write(ctx, websocket.MessageText, msg); err != nil {
 		return err
 	}

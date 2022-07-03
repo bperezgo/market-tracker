@@ -1,4 +1,4 @@
-package adapter
+package factory
 
 import (
 	"encoding/json"
@@ -10,10 +10,10 @@ import (
 	"markettracker.com/tracker/internal/replicate"
 )
 
-type Tiingo struct{}
+type TiingoAdapter struct{}
 
-func NewTiingo() *Tiingo {
-	return &Tiingo{}
+func NewTiingoAdapter() *TiingoAdapter {
+	return &TiingoAdapter{}
 }
 
 // TiingoMsg interface of the tiingo api in the websocket
@@ -26,7 +26,7 @@ type TiingoMsg struct {
 
 // Must implements IMsgAdapter
 // TODO: The validations here are part of the domain. Refactor to domain
-func (*Tiingo) Adapt(buf []byte) (command.Command, error) {
+func (TiingoAdapter) Adapt(buf []byte) (command.Command, error) {
 	msg := &TiingoMsg{}
 	if err := json.Unmarshal(buf, msg); err != nil {
 		return replicate.ReplicateCommand{}, err

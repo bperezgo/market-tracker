@@ -1,6 +1,18 @@
 {
   "Port": 3000,
   "Host": "http://localhost",
+  "RealTimeConnections": {
+    "Tiingo": {
+      "TiingoApiUrl": "wss://api.tiingo.com/crypto",
+      "SubscriptionEvent": {
+        "EventName": "subscribe",
+        "Authorization": "some super secret key",
+        "EventData": {
+          "ThresholdLevel": 5
+        }
+      }
+    }
+  },
   "TiingoApiToken": "some super secret key",
   "TiingoApiUrl": "wss://api.tiingo.com/crypto",
   "Events": [
