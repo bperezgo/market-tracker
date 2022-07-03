@@ -26,7 +26,7 @@ type Event interface {
 	AggregateId() string
 	OccurredOn() time.Time
 	Type() Type
-	// Method to get the event with the struct necessary to be sent
+	// Method to get the event with the struct necessary to send to he other services
 	DTO() interface{}
 }
 

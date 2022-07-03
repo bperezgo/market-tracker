@@ -3,6 +3,7 @@ package replicate
 import (
 	"context"
 	"log"
+	"time"
 
 	"markettracker.com/pkg/event"
 	domain "markettracker.com/tracker/internal"
@@ -20,9 +21,9 @@ func New(eventBus event.Bus) *Replicator {
 	}
 }
 
-func (a *Replicator) Replicate(ctx context.Context, marketMsg domain.AssetDTO) error {
-	log.Printf("[INFO] replicating the message with exchanger '%s'", marketMsg.Exchange)
-	asset, err := domain.NewAsset(marketMsg)
+func (a *Replicator) Replicate(ctx context.Context, id string, date time.Time, exchange string, price float32) error {
+	log.Printf("[INFO] replicating the message with exchange '%s'", exchange)
+	asset, err := domain.NewAsset(id, date, exchange, price)
 	if err != nil {
 		return err
 	}

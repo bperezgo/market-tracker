@@ -8,12 +8,15 @@ import (
 
 type Exchange string
 
-// TODO: review if it is better inject this event from the NewAssetRecordedEvent
+// TODO: define the different types allowed from configuration,
+// TODO: Allow that the event define the type in runtime,
+// because must exist event for exhange
 const AssetRecordedEventType event.Type = "events.asset.recorded"
 
 type AssetRecordedEventDTO struct {
 	event.EventDTO
 	Data Data `json:"data"`
+	Meta Meta `json:"meta"`
 }
 
 type AssetRecordedEvent struct {
@@ -24,6 +27,10 @@ type Data struct {
 	Date     time.Time `json:"date"`
 	Exchange Exchange  `json:"exchange"`
 	Price    float32   `json:"price"`
+}
+
+// TODO: Define metadata needed to pass between microservices
+type Meta struct {
 }
 
 func NewAssetRecordedEvent(id string, date time.Time, exchange string, price float32) AssetRecordedEvent {
@@ -50,5 +57,6 @@ func (ar AssetRecordedEvent) DTO() interface{} {
 			Type:        string(ar.Type()),
 		},
 		Data: ar.Data,
+		Meta: Meta{},
 	}
 }

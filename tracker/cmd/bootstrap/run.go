@@ -5,8 +5,11 @@ import (
 	"log"
 
 	"markettracker.com/tracker/config"
+	"markettracker.com/tracker/internal/platform/adapter"
+	"markettracker.com/tracker/internal/platform/bus/inmemory"
 	"markettracker.com/tracker/internal/platform/bus/kafka"
 	"markettracker.com/tracker/internal/platform/server"
+	"markettracker.com/tracker/internal/platform/ws"
 	"markettracker.com/tracker/internal/platform/ws/tiingo"
 	"markettracker.com/tracker/internal/replicate"
 )
@@ -16,33 +19,36 @@ func Run() error {
 	log.SetFlags(0)
 	ctx := context.Background()
 	c := config.GetConfiguration()
+	commandBus := inmemory.NewCommandBus()
 	// TODO: define strategy of initialization of different kafka channels
 	eventBus, err := kafka.NewEventBus(c.Events[0].BootstrapBrokerAddr, c.Events[0].Topic)
 	if err != nil {
 		return err
 	}
 	replicator := replicate.New(eventBus)
-	tiingoOpts := tiingo.TiingoOptions{
+	tiingoOpts := tiingo.Options{
 		Url: c.TiingoApiUrl,
-		SubEvent: &tiingo.SubTiingoOpts{
+		SubEvent: &tiingo.SubOpts{
 			EventName:     "subscribe",
 			Authorization: c.TiingoApiToken,
-			EventData: &tiingo.EventDataTiingo{
+			EventData: &tiingo.EventData{
 				ThresholdLevel: 5,
 			},
 		},
 	}
-	ws, err := tiingo.New(ctx, replicator, tiingoOpts)
+	replicateCmdHandler := replicate.NewReplicateCommandHandler(replicator)
+	tiingoAdapter := adapter.NewTiingo()
+	commandBus.Register(replicate.ReplicateCommandType, replicateCmdHandler)
+	wsWrapper, err := ws.New(ctx, tiingoAdapter, commandBus, ws.Opts{
+		Url: tiingoOpts.Url,
+	})
 	if err != nil {
 		return err
 	}
-	// run in a go rutine because in the subscription, the subscriber is waiting
-	// for msgs
-	err = ws.Subscribe(ctx)
+	err = wsWrapper.Subscribe(ctx, tiingoOpts.SubEvent)
 	if err != nil {
 		return err
 	}
-	ws.Listen(ctx)
 	s := server.New(c.Host, c.Port)
 	return s.Start(ctx)
 }

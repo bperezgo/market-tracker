@@ -31,6 +31,7 @@ func NewEventBus(bootstrapBrokerAddr string, topic string) (*EventBus, error) {
 }
 
 func (eb *EventBus) Publish(ctx context.Context, events []event.Event) error {
+	log.Println("[INFO] Publishing events")
 	for _, event := range events {
 		log.Println("[INFO] publishing event with id ", event.AggregateId())
 		message, err := eb.encondeMessage(event)
@@ -48,6 +49,7 @@ func (eb *EventBus) encondeMessage(event event.Event) (kafka.Message, error) {
 	if err != nil {
 		return kafka.Message{}, err
 	}
+	// TODO: Define topic with the type of the event
 	return kafka.Message{
 		Key:   []byte("string"),
 		Value: m,

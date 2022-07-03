@@ -18,30 +18,30 @@ type Asset struct {
 }
 
 // TODO: Revies if it is needed to pass all the parameters or a DTO is enough
-func NewAsset(assetDTO AssetDTO) (Asset, error) {
-	id, err := NewAssetID(assetDTO.ID)
+func NewAsset(id string, date time.Time, exchange string, price float32) (Asset, error) {
+	idVO, err := NewAssetID(id)
 	if err != nil {
 		return Asset{}, err
 	}
-	date, err := NewDate(assetDTO.Date)
+	dateVO, err := NewDate(date)
 	if err != nil {
 		return Asset{}, err
 	}
-	name, err := NewExchangeName(assetDTO.Exchange)
+	nameVO, err := NewExchangeName(exchange)
 	if err != nil {
 		return Asset{}, err
 	}
-	price, err := NewPrice(assetDTO.Price)
+	priceVO, err := NewPrice(price)
 	if err != nil {
 		return Asset{}, err
 	}
 	asset := Asset{
-		id:           id,
-		date:         date,
-		exchangeName: name,
-		price:        price,
+		id:           idVO,
+		date:         dateVO,
+		exchangeName: nameVO,
+		price:        priceVO,
 	}
-	asset.Record(NewAssetRecordedEvent(assetDTO.ID, assetDTO.Date, assetDTO.Exchange, assetDTO.Price))
+	asset.Record(NewAssetRecordedEvent(id, date, exchange, price))
 	return asset, nil
 }
 
@@ -91,11 +91,11 @@ func NewPrice(value float32) (Price, error) {
 	}, nil
 }
 
-func (a Asset) Record(evt event.Event) {
+func (a *Asset) Record(evt event.Event) {
 	a.events = append(a.events, evt)
 }
 
-func (a Asset) PullEvents() []event.Event {
+func (a *Asset) PullEvents() []event.Event {
 	evts := a.events
 	a.events = []event.Event{}
 	return evts

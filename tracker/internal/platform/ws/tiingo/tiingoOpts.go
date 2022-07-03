@@ -1,16 +1,16 @@
 package tiingo
 
-type EventDataTiingo struct {
+type EventData struct {
 	ThresholdLevel int `json:"thresholdLevel"`
 }
 
-type SubTiingoOpts struct {
-	EventName     string           `json:"eventName"`
-	Authorization string           `json:"authorization"`
-	EventData     *EventDataTiingo `json:"eventData"`
+type SubOpts struct {
+	EventName     string     `json:"eventName"`
+	Authorization string     `json:"authorization"`
+	EventData     *EventData `json:"eventData"`
 }
 
-type TiingoOptions struct {
+type Options struct {
 	Url      string
-	SubEvent *SubTiingoOpts
+	SubEvent *SubOpts
 }

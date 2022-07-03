@@ -1,12 +1,20 @@
-package tiingo
+package adapter
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
 
-	domain "markettracker.com/tracker/internal"
+	"markettracker.com/pkg/command"
+	"markettracker.com/tracker/internal/replicate"
 )
+
+type Tiingo struct{}
+
+func NewTiingo() *Tiingo {
+	return &Tiingo{}
+}
 
 // TiingoMsg interface of the tiingo api in the websocket
 type TiingoMsg struct {
@@ -18,7 +26,11 @@ type TiingoMsg struct {
 
 // Must implements IMsgAdapter
 // TODO: The validations here are part of the domain. Refactor to domain
-func TiingoAdapter(msg *TiingoMsg) (domain.AssetDTO, error) {
+func (*Tiingo) Adapt(buf []byte) (command.Command, error) {
+	msg := &TiingoMsg{}
+	if err := json.Unmarshal(buf, msg); err != nil {
+		return replicate.ReplicateCommand{}, err
+	}
 	// [Msg Type, Ticker, Date, Exchange, LastSize, LastPrice]
 	var values [6]interface{}
 	for idx, el := range msg.Data {
@@ -26,25 +38,25 @@ func TiingoAdapter(msg *TiingoMsg) (domain.AssetDTO, error) {
 	}
 	date, ok := values[2].(string)
 	if !ok {
-		return domain.AssetDTO{}, fmt.Errorf("date is nil")
+		return replicate.ReplicateCommand{}, fmt.Errorf("date is nil")
 	}
 	dateTime, err := time.Parse(time.RFC3339, date)
 	if err != nil {
 		log.Println(err)
-		return domain.AssetDTO{}, fmt.Errorf("data doesnot have right format")
+		return replicate.ReplicateCommand{}, fmt.Errorf("data doesnot have right format")
 	}
 	exchange, ok := values[3].(string)
 	if !ok {
-		return domain.AssetDTO{}, fmt.Errorf("exchange is nil")
+		return replicate.ReplicateCommand{}, fmt.Errorf("exchange is nil")
 	}
 	price, ok := values[5].(float64)
 	if !ok {
-		return domain.AssetDTO{}, fmt.Errorf("lastprice is nil")
+		return replicate.ReplicateCommand{}, fmt.Errorf("lastprice is nil")
 	}
-	marketData := domain.AssetDTO{
-		Date:     dateTime,
-		Exchange: exchange,
-		Price:    float32(price),
-	}
+	marketData := replicate.NewReplicateCommand(
+		dateTime,
+		exchange,
+		float32(price),
+	)
 	return marketData, nil
 }
