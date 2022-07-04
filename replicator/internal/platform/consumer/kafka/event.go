@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
-	"markettracker.com/pkg/event"
+	domain "markettracker.com/replicator/internal"
 )
 
 type consumer struct {
@@ -37,7 +37,7 @@ func NewConsumer(bootstrapBrokerAddr string, topic string, consumerGroup string)
 	}, nil
 }
 
-func (c *consumer) Read(ctx context.Context, chMsg chan event.EventDTO, chErr chan error) {
+func (c *consumer) Read(ctx context.Context, chMsg chan domain.AssetRecordedEventDTO, chErr chan error) {
 	defer c.reader.Close()
 	for {
 		m, err := c.reader.ReadMessage(ctx)
@@ -46,7 +46,7 @@ func (c *consumer) Read(ctx context.Context, chMsg chan event.EventDTO, chErr ch
 			continue
 		}
 
-		var message event.EventDTO
+		var message domain.AssetRecordedEventDTO
 		err = json.Unmarshal(m.Value, &message)
 		if err != nil {
 			chErr <- err

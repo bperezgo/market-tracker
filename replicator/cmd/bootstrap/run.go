@@ -8,14 +8,26 @@ import (
 	"os/signal"
 	"syscall"
 
-	"markettracker.com/pkg/event"
+	domain "markettracker.com/replicator/internal"
 	"markettracker.com/replicator/internal/config"
+	"markettracker.com/replicator/internal/platform/cmdbus"
 	"markettracker.com/replicator/internal/platform/consumer/kafka"
+	"markettracker.com/replicator/internal/platform/storage"
+	"markettracker.com/replicator/internal/saveasset"
 )
 
 func Run() error {
+	log.Println("[INFO] Running the replicator instance")
 	c := config.GetConfiguration()
-	chMsg := make(chan event.EventDTO)
+	ctx := context.Background()
+	cmdBus := cmdbus.NewCommandBus()
+
+	inmemory := storage.NewInMemory()
+	assetService := saveasset.NewAssetService(inmemory)
+	assetServiceHandler := saveasset.NewSaveAssetCommandHandler(assetService)
+
+	cmdBus.Register(saveasset.SaveAssetCommandType, assetServiceHandler)
+	chMsg := make(chan domain.AssetRecordedEventDTO)
 	chErr := make(chan error)
 	consumer, err := kafka.NewConsumer(c.Events[0].BootstrapBrokerAddr, c.Events[0].Topic, c.Events[0].ConsumerGroup)
 	if err != nil {
@@ -33,7 +45,7 @@ func Run() error {
 		case <-quit:
 			goto end
 		case m := <-chMsg:
-			log.Printf("message: %+v", m)
+			cmdBus.Dispatch(ctx, saveasset.NewSaveAssetCommand(m))
 		case err := <-chErr:
 			log.Println(err)
 		}
