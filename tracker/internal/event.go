@@ -15,22 +15,19 @@ const AssetRecordedEventType event.Type = "events.asset.recorded"
 
 type AssetRecordedEventDTO struct {
 	event.EventDTO
-	Data Data `json:"data"`
-	Meta Meta `json:"meta"`
+	Data Data                   `json:"data"`
+	Meta map[string]interface{} `json:"meta"`
 }
 
 type AssetRecordedEvent struct {
 	event.BaseEvent
 	Data Data
 }
+
 type Data struct {
 	Date     time.Time `json:"date"`
 	Exchange Exchange  `json:"exchange"`
 	Price    float32   `json:"price"`
-}
-
-// TODO: Define metadata needed to pass between microservices
-type Meta struct {
 }
 
 func NewAssetRecordedEvent(id string, date time.Time, exchange string, price float32) AssetRecordedEvent {
@@ -57,6 +54,5 @@ func (ar AssetRecordedEvent) DTO() interface{} {
 			Type:        string(ar.Type()),
 		},
 		Data: ar.Data,
-		Meta: Meta{},
 	}
 }

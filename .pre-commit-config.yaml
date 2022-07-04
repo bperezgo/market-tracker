@@ -5,9 +5,8 @@ repos:
       - id: conventional-pre-commit
         stages: [commit-msg]
   - repo: https://github.com/dnephin/pre-commit-golang
-    rev: master
+    rev: v0.5.0
     hooks:
       - id: go-fmt
-      - id: go-lint
-      - id: go-imports
-      - id: go-unit-tests
+      # - id: golangci-lint
+      # - id: go-unit-tests
