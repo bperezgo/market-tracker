@@ -1,6 +1,16 @@
 # Linter Strategy
 
-TODO:
+We use [golangci-lint](https://github.com/golangci/golangci-lint) to verify if the code accomplish with the rules needed to pass
+
+```bash
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.46.2
+```
+
+The basic strategy is run the linter inside each module specified in the go.work with the command
+
+```bash
+golangci-lint run <workspace>/...
+```
 
 # Testing Strategy
 
