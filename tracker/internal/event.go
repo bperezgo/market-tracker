@@ -26,9 +26,10 @@ type AssetRecordedEvent struct {
 }
 
 type Data struct {
-	Date     time.Time `json:"date"`
-	Exchange Exchange  `json:"exchange"`
-	Price    float32   `json:"price"`
+	AggregateId string    `json:"aggregateId"`
+	Date        time.Time `json:"date"`
+	Exchange    Exchange  `json:"exchange"`
+	Price       float32   `json:"price"`
 }
 
 func NewAssetRecordedEvent(id string, date time.Time, exchange string, price float32) AssetRecordedEvent {
@@ -36,9 +37,10 @@ func NewAssetRecordedEvent(id string, date time.Time, exchange string, price flo
 	return AssetRecordedEvent{
 		BaseEvent: event.NewBaseEvent(id),
 		data: Data{
-			Date:     date,
-			Exchange: Exchange(exchange),
-			Price:    price,
+			AggregateId: id,
+			Date:        date,
+			Exchange:    Exchange(exchange),
+			Price:       price,
 		},
 		meta: meta,
 	}
@@ -51,10 +53,13 @@ func (AssetRecordedEvent) Type() event.Type {
 func (ar AssetRecordedEvent) DTO() interface{} {
 	return &AssetRecordedEventDTO{
 		EventDTO: event.EventDTO{
-			EventId:     ar.Id(),
-			AggregateId: ar.AggregateId(),
-			OccurredOn:  ar.OccurredOn().String(),
-			Type:        string(ar.Type()),
+			Data: event.EventDataDTO{
+				EventId:    ar.Id(),
+				OccurredOn: ar.OccurredOn().String(),
+				Type:       string(ar.Type()),
+				Meta:       ar.Meta(),
+				Attributes: ar.Data(),
+			},
 		},
 		Data: ar.data,
 		Meta: ar.meta,

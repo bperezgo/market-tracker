@@ -16,9 +16,10 @@ type AssetRecordedEventDTO struct {
 }
 
 type Data struct {
-	Date     string  `json:"date"`
-	Exchange string  `json:"exchange"`
-	Price    float32 `json:"price"`
+	AggregateId string  `json:"aggregateId"`
+	Date        string  `json:"date"`
+	Exchange    string  `json:"exchange"`
+	Price       float32 `json:"price"`
 }
 
 type AssetRepository interface {

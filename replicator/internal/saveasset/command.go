@@ -19,7 +19,7 @@ type SaveAssetCommand struct {
 // TODO: Command incomplete
 func NewSaveAssetCommand(evt domain.AssetRecordedEventDTO) SaveAssetCommand {
 	return SaveAssetCommand{
-		ID:       evt.AggregateId,
+		ID:       evt.Data.AggregateId,
 		Date:     evt.Data.Date,
 		Exchange: evt.Data.Exchange,
 		Price:    evt.Data.Price,
