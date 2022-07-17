@@ -4,9 +4,10 @@ repos:
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
-  - repo: https://github.com/dnephin/pre-commit-golang
-    rev: v0.5.0
+  - repo: local
     hooks:
-      - id: go-fmt
-      # - id: golangci-lint
-      # - id: go-unit-tests
+      - id: golangci-lint
+        name: golang linter
+        entry: ./linters/index.sh
+        stages: [commit, push]
+        language: golang

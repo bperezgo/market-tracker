@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Remember change the persmissions of this file
-pre-commit install --hook-type commit-msg
+chmod +x ./linters/*
+pre-commit install
 # TODO: Used to initialize the dev project, and work with the dev config in local
 
 # This command works ok initializing the first topic, over this, will be iterated
