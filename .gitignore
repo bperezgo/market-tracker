@@ -4,7 +4,6 @@ tags
 .vscode/
 
 *.env
-NOTES.md
 ## This name is reserved to compiled binaries of the services
 executable
 
