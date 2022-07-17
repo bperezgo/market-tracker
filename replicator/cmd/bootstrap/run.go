@@ -37,7 +37,7 @@ func Run() error {
 	go func() {
 		consumer.Read(context.Background(), chMsg, chErr)
 	}()
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	for {
@@ -45,7 +45,8 @@ func Run() error {
 		case <-quit:
 			goto end
 		case m := <-chMsg:
-			cmdBus.Dispatch(ctx, saveasset.NewSaveAssetCommand(m))
+			err = cmdBus.Dispatch(ctx, saveasset.NewSaveAssetCommand(m))
+			log.Println(err)
 		case err := <-chErr:
 			log.Println(err)
 		}

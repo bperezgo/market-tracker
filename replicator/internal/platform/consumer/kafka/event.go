@@ -3,7 +3,6 @@ package kafka
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
 
@@ -18,6 +17,9 @@ type consumer struct {
 func NewConsumer(bootstrapBrokerAddr string, topic string, consumerGroup string) (consumer, error) {
 	// use this method to know if the broker exists, like a ping, but the connection wont be used
 	conn, err := kafka.DialLeader(context.Background(), "tcp", bootstrapBrokerAddr, topic, 0)
+	if err != nil {
+		return consumer{}, err
+	}
 	defer conn.Close()
 	if err != nil {
 		return consumer{}, err
@@ -42,7 +44,7 @@ func (c *consumer) Read(ctx context.Context, chMsg chan domain.AssetRecordedEven
 	for {
 		m, err := c.reader.ReadMessage(ctx)
 		if err != nil {
-			chErr <- errors.New(fmt.Sprintf("error while reading a message: %v", err))
+			chErr <- fmt.Errorf("error while reading a message: %v", err)
 			continue
 		}
 
