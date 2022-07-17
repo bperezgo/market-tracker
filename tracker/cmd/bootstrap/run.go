@@ -14,7 +14,10 @@ func Run() error {
 	if err != nil {
 		return err
 	}
-	EstablishRealTimeConnections(ctx)
+	err = EstablishRealTimeConnections(ctx)
+	if err != nil {
+		return err
+	}
 	s := server.New(c.Host, c.Port)
 	return s.Start(ctx)
 }

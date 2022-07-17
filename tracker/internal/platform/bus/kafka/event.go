@@ -25,8 +25,9 @@ func NewEventBus(bootstrapBrokerAddr string, topic string) (*EventBus, error) {
 	// and use the defer conn.Close()
 
 	return &EventBus{
-		client: conn,
-		topic:  topic,
+		client:   conn,
+		topic:    topic,
+		clientID: "clientID",
 	}, nil
 }
 
@@ -39,7 +40,9 @@ func (eb *EventBus) Publish(ctx context.Context, events []event.Event) error {
 			return err
 		}
 		_, err = eb.client.WriteMessages(message)
-		return err
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

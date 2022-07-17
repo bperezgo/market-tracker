@@ -32,10 +32,7 @@ func (TiingoAdapter) Adapt(buf []byte) (command.Command, error) {
 		return replicate.ReplicateCommand{}, err
 	}
 	// [Msg Type, Ticker, Date, Exchange, LastSize, LastPrice]
-	var values [6]interface{}
-	for idx, el := range msg.Data {
-		values[idx] = el
-	}
+	var values [6]interface{} = msg.Data
 	date, ok := values[2].(string)
 	if !ok {
 		return replicate.ReplicateCommand{}, fmt.Errorf("date is nil")

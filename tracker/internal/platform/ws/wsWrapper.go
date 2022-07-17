@@ -25,12 +25,11 @@ type Opts struct {
 // used to generalize the subscription to different websockets
 type Ws struct {
 	opts Opts
-	// TODO:
-	publisherChannel chan<- interface{}
-	conn             *websocket.Conn
-	publishLimiter   *rate.Limiter
-	messageAdapter   MessageAdapter
-	commandBus       command.Bus
+	// TODO: publisherChannel chan<- interface{}
+	conn           *websocket.Conn
+	publishLimiter *rate.Limiter
+	messageAdapter MessageAdapter
+	commandBus     command.Bus
 }
 
 func New(ctx context.Context, messageAdapter MessageAdapter, commandBus command.Bus, opts Opts) (*Ws, error) {
@@ -56,6 +55,9 @@ func New(ctx context.Context, messageAdapter MessageAdapter, commandBus command.
 // subEvent is the subscription event needed to connect to the websocket
 func (w *Ws) Subscribe(ctx context.Context) error {
 	msg, err := json.Marshal(w.opts.SubscriptionEvent)
+	if err != nil {
+		return err
+	}
 	if err = w.conn.Write(ctx, websocket.MessageText, msg); err != nil {
 		return err
 	}
