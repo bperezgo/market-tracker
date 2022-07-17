@@ -21,7 +21,8 @@ type AssetRecordedEventDTO struct {
 
 type AssetRecordedEvent struct {
 	event.BaseEvent
-	Data Data
+	data Data
+	meta map[string]interface{}
 }
 
 type Data struct {
@@ -31,13 +32,15 @@ type Data struct {
 }
 
 func NewAssetRecordedEvent(id string, date time.Time, exchange string, price float32) AssetRecordedEvent {
+	meta := make(map[string]interface{})
 	return AssetRecordedEvent{
 		BaseEvent: event.NewBaseEvent(id),
-		Data: Data{
+		data: Data{
 			Date:     date,
 			Exchange: Exchange(exchange),
 			Price:    price,
 		},
+		meta: meta,
 	}
 }
 
@@ -53,6 +56,15 @@ func (ar AssetRecordedEvent) DTO() interface{} {
 			OccurredOn:  ar.OccurredOn(),
 			Type:        string(ar.Type()),
 		},
-		Data: ar.Data,
+		Data: ar.data,
+		Meta: ar.meta,
 	}
+}
+
+func (ar AssetRecordedEvent) Meta() map[string]interface{} {
+	return ar.meta
+}
+
+func (ar AssetRecordedEvent) Data() interface{} {
+	return ar.data
 }

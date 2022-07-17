@@ -31,6 +31,14 @@ func (DummyEvent) DTO() interface{} {
 	return "{}"
 }
 
+func (DummyEvent) Data() interface{} {
+	return ""
+}
+
+func (DummyEvent) Meta() map[string]interface{} {
+	return nil
+}
+
 func Test_Ok_Publish_A_Market_Asset_Message_To_Kafka_Broker(t *testing.T) {
 	kafkaPublisher, err := NewEventBus("localhost:9092", "events.dummy.type")
 	require.NoError(t, err, "no connected")

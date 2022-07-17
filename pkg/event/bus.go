@@ -30,6 +30,8 @@ type Event interface {
 	Type() Type
 	// Method to get the event with the struct necessary to send to he other services
 	DTO() interface{}
+	Data() interface{}
+	Meta() map[string]interface{}
 }
 
 type BaseEvent struct {
