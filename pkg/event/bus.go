@@ -19,7 +19,7 @@ type Type string
 type EventDTO struct {
 	EventId     string
 	AggregateId string
-	OccurredOn  time.Time
+	OccurredOn  string
 	Type        string
 }
 

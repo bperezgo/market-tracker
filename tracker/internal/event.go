@@ -53,7 +53,7 @@ func (ar AssetRecordedEvent) DTO() interface{} {
 		EventDTO: event.EventDTO{
 			EventId:     ar.Id(),
 			AggregateId: ar.AggregateId(),
-			OccurredOn:  ar.OccurredOn(),
+			OccurredOn:  ar.OccurredOn().String(),
 			Type:        string(ar.Type()),
 		},
 		Data: ar.data,
