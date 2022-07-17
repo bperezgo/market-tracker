@@ -14,6 +14,7 @@ type Bus interface {
 }
 
 // Type represents a domain event type.
+// Expected struct is <application>.<bounded-context>.<version>.<type-of-message>.<aggregate>.<what-happened>
 type Type string
 
 type EventDTO struct {

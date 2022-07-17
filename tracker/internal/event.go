@@ -11,7 +11,7 @@ type Exchange string
 // TODO: define the different types allowed from configuration,
 // TODO: Allow that the event define the type in runtime,
 // because must exist event for exhange
-const AssetRecordedEventType event.Type = "events.asset.recorded"
+const AssetRecordedEventType event.Type = "markettracker.tracker.1.events.asset.recorded"
 
 type AssetRecordedEventDTO struct {
 	event.EventDTO
