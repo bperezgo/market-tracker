@@ -8,6 +8,13 @@ repos:
     hooks:
       - id: golangci-lint
         name: golang linter
-        entry: ./linters/index.sh
+        entry: ./pipelines/linters/index.sh
+        stages: [commit, push]
+        language: golang
+  - repo: local
+    hooks:
+      - id: tests
+        name: golang tests
+        entry: ./pipelines/tests/index.sh
         stages: [commit, push]
         language: golang

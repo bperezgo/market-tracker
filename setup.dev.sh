@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Remember change the persmissions of this file
-chmod +x ./linters/*
+chmod +x ./pipelines/**/*.sh
 pre-commit install
 # TODO: Used to initialize the dev project, and work with the dev config in local
 
