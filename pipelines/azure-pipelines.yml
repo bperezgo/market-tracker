@@ -11,9 +11,10 @@ pool:
 
 variables:
   GOBIN: "$(GOPATH)/bin" # Go binaries path
-  GOROOT: "/usr/local/go1.18" # Go installation path
+  GOROOT: "$(system.defaultWorkingDirectory)/go" # Go installation path
   GOPATH: "$(system.defaultWorkingDirectory)/gopath" # Go workspace path
-  modulePath: "$(GOPATH)/src/github.com/$(build.repository.name)" # Path to the module's code
+  modulePath: "$(GOPATH)/src/github.com/$(build.repository.name)"
+  scriptsPath: "$(system.defaultWorkingDirectory)/pipelines/" # Path to the module's code
 
 steps:
   - task: GoTool@0
