@@ -28,3 +28,7 @@ go tool cover -func=coverage
 ```
 
 TODO: The next action needed to do is delete the coverage file genereted
+
+# Deploy strategy
+
+TODO: Review this info https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes
