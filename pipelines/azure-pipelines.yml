@@ -22,16 +22,19 @@ stages:
       - job: TestAndBuild
         pool:
           vmImage: "ubuntu-latest"
-          container: golang:1.18.4
+        container: golang:1.18.4
         steps:
-          - script: |
-              echo $(system.defaultWorkingDirectory)
-              chmod +x setup.sh
-              ./setup.sh
-            dispalyName: 'Setting up the needed tools'
-          - script: |
-              ./pipelines/linters/index.sh
-            dispalyName: 'Running linters of Go'
+          - task: GoTool@0
+            inputs:
+              version: '1.18.4'
+          - task: CmdLine@2
+            inputs:
+              script: |
+                chmod +x setup.sh
+                ./setup.sh
+                ./pipelines/linters/setup.sh
+                ./pipelines/linters/index.sh
+            displayName: 'Setting up the needed tools'
           # - task: Go@0displayName: 'Go Test'
           #   inputs:
           #   command: 'test'
