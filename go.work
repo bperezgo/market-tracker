@@ -1,6 +1,7 @@
 go 1.18
 
 use (
+	./pipelines/find_workspace
 	./pkg
 	./replicator
 	./tracker
