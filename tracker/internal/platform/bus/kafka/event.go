@@ -31,6 +31,15 @@ func NewEventBus(bootstrapBrokerAddr string, topic string) (*EventBus, error) {
 	}, nil
 }
 
+func conn(bootstrapBrokerAddr string, topic string) error {
+	conn, err := kafka.DialLeader(context.Background(), "tcp", bootstrapBrokerAddr, topic, 0)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+	return nil
+}
+
 func (eb *EventBus) Publish(ctx context.Context, events []event.Event) error {
 	log.Println("[INFO] Publishing events")
 	for _, event := range events {
