@@ -16,5 +16,13 @@ repos:
       - id: tests
         name: golang tests
         entry: ./pipelines/tests/index.sh
-        stages: [commit, push]
+        stages: [commit, post-commit, push]
+        language: golang
+  - repo: local
+    hooks:
+      - id: cleanup
+        name: golang cleanup
+        always_run: true
+        entry: ./pipelines/cleanup/index.sh
+        stages: [post-commit]
         language: golang
