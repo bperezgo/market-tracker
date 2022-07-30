@@ -16,7 +16,12 @@ func EstablishRealTimeConnections(ctx context.Context, commandBus command.Bus) e
 		return err
 	}
 	// TODO: define strategy of initialization of different kafka channels
-	eventBus, err := kafka.NewEventBus(c.Events[0].BootstrapBrokerAddr, c.Events[0].Topic)
+	eventBusConfig := kafka.EventBusConfig{
+		Brokers:  c.Events[0].Brokers,
+		Topic:    c.Events[0].Topic,
+		ClientID: "clientID",
+	}
+	eventBus, err := kafka.NewEventBus(eventBusConfig)
 	if err != nil {
 		return err
 	}

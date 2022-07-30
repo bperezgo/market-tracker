@@ -18,8 +18,8 @@
   "Events": [
     {
       "Type": "",
-      "BrokerBootstrapAddr": "localhost:9092",
-      "Brokers": ["1", "2", "3"],
+      "BrokerBootstrapAddr": "localhost:9093",
+      "Brokers": ["localhost:9093"],
       "Topic": ""
     }
   ]

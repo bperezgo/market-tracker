@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.7.4
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
+	github.com/oklog/ulid/v2 v2.1.0
 	github.com/segmentio/kafka-go v0.4.32
 	github.com/stretchr/testify v1.7.1
 	github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f

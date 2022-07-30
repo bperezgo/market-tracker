@@ -44,17 +44,13 @@ func Test_Connection_With_Kafka(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func Test_Ok_Publish_A_Market_Asset_Message_To_Kafka_Broker(t *testing.T) {
-	kafkaPublisher, err := NewEventBus("localhost:9093", "events.dummy.type")
-	require.NoError(t, err, "no connected")
-	ctx := context.Background()
-	dummyEvent := NewDummyEvent()
-	err = kafkaPublisher.Publish(ctx, []event.Event{dummyEvent})
-	assert.NoError(t, err, "error was not expected")
-}
-
 func Test_Should_Publish_Event(t *testing.T) {
-	kafkaPublisher, err := NewEventBus("localhost:9093", "events.dummy.type")
+	config := EventBusConfig{
+		Brokers:  []string{"localhost:9093"},
+		Topic:    "events.dummy.type",
+		ClientID: "someId",
+	}
+	kafkaPublisher, err := NewEventBus(config)
 	require.NoError(t, err, "no connected")
 	ctx := context.Background()
 	dummyEvent := NewDummyEvent()
