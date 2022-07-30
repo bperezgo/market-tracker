@@ -8,6 +8,10 @@ import (
 	"markettracker.com/pkg/event"
 )
 
+type AssetRepository interface {
+	Save(asset Asset) error
+}
+
 type Asset struct {
 	id           AssetID
 	date         Date
@@ -61,6 +65,10 @@ func NewAssetID(value string) (AssetID, error) {
 	}, nil
 }
 
+func (a Asset) ID() string {
+	return a.id.value
+}
+
 type Date struct {
 	value time.Time
 }
@@ -71,11 +79,24 @@ func NewDate(date time.Time) (Date, error) {
 	}, nil
 }
 
+func (a Asset) RFC3339() string {
+	return a.date.value.Format(time.RFC3339)
+}
+
+func (a Asset) Date() time.Time {
+	return a.date.value
+}
+
+var ErrExchangeNameIsEmpty = errors.New("exchange name cannot be empty")
+
 type ExchangeName struct {
 	value string
 }
 
 func NewExchangeName(name string) (ExchangeName, error) {
+	if name == "" {
+		return ExchangeName{}, ErrExchangeNameIsEmpty
+	}
 	return ExchangeName{
 		value: name,
 	}, nil
@@ -89,6 +110,10 @@ func NewPrice(value float32) (Price, error) {
 	return Price{
 		value: value,
 	}, nil
+}
+
+func (a Asset) Float32Price() float32 {
+	return a.price.value
 }
 
 func (a *Asset) Record(evt event.Event) {
