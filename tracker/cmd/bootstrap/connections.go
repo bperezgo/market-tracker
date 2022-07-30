@@ -15,19 +15,20 @@ func EstablishRealTimeConnections(ctx context.Context, commandBus command.Bus) e
 	if err != nil {
 		return err
 	}
-	// TODO: define strategy of initialization of different kafka channels
-	eventBusConfig := kafka.EventBusConfig{
-		Brokers:  c.Events[0].Brokers,
-		Topic:    c.Events[0].Topic,
-		ClientID: "clientID",
+	for _, config := range c.Events {
+		eventBusConfig := kafka.EventBusConfig{
+			Brokers:  config.Brokers,
+			Topic:    config.Topic,
+			ClientID: config.ClientID,
+		}
+		eventBus, err := kafka.NewEventBus(eventBusConfig)
+		if err != nil {
+			return err
+		}
+		replicator := replicate.New(eventBus)
+		replicateCmdHandler := replicate.NewReplicateCommandHandler(replicator)
+		commandBus.Register(replicate.ReplicateCommandType, replicateCmdHandler)
 	}
-	eventBus, err := kafka.NewEventBus(eventBusConfig)
-	if err != nil {
-		return err
-	}
-	replicator := replicate.New(eventBus)
-	replicateCmdHandler := replicate.NewReplicateCommandHandler(replicator)
-	commandBus.Register(replicate.ReplicateCommandType, replicateCmdHandler)
 
 	for _, config := range c.RealTimeConnections {
 		// TODO: Define strategy to create various factories invokations

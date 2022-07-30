@@ -20,7 +20,8 @@
       "Type": "",
       "BrokerBootstrapAddr": "localhost:9093",
       "Brokers": ["localhost:9093"],
-      "Topic": ""
+      "Topic": "",
+      "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
     }
   ]
 }

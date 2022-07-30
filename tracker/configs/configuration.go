@@ -18,6 +18,7 @@ type Event struct {
 	BootstrapBrokerAddr string
 	Brokers             []string
 	Topic               string
+	ClientID            string
 }
 
 var configuration *Configuration
