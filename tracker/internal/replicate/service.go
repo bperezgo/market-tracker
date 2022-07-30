@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"markettracker.com/pkg/event"
-	domain "markettracker.com/tracker/internal"
+	"markettracker.com/tracker/internal/domain"
 )
 
 // This service take the data from the real data source, and is returned a desired structure
