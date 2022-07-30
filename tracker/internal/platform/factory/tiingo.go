@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"markettracker.com/pkg/command"
+	"markettracker.com/tracker/configs"
 	"markettracker.com/tracker/internal/platform/ws"
 )
 
@@ -24,12 +25,12 @@ type TiingoOptions struct {
 	SubscriptionEvent interface{} `json:"SubscriptionEvent"`
 }
 
-func NewTiingo(ctx context.Context, commandBus command.Bus, config map[string]interface{}) error {
-	url, ok := config["TiingoApiUrl"].(string)
+func NewTiingo(ctx context.Context, commandBus command.Bus, config configs.RealTimeConnection) error {
+	url, ok := config.Data["TiingoApiUrl"].(string)
 	if !ok {
 		return fmt.Errorf("Tiingo Url is not defined")
 	}
-	subEvent, ok := config["SubscriptionEvent"]
+	subEvent, ok := config.Data["SubscriptionEvent"]
 	if !ok {
 		return fmt.Errorf("Tiingo SubscriptionEvent is not defined")
 	}

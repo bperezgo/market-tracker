@@ -7,18 +7,22 @@ import (
 type Configuration struct {
 	Port                int32
 	Host                string
-	TiingoApiToken      string
-	TiingoApiUrl        string
 	Events              []Event
-	RealTimeConnections map[string]map[string]interface{}
+	RealTimeConnections []RealTimeConnection
+}
+
+type RealTimeConnection struct {
+	Type   string
+	Data   map[string]interface{}
+	Events []Event
 }
 
 type Event struct {
 	Type                string
 	BootstrapBrokerAddr string
 	Brokers             []string
-	Topic               string
 	ClientID            string
+	Exchange            string
 }
 
 var configuration *Configuration

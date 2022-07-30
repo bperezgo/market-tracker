@@ -21,9 +21,10 @@ type EventBus struct {
 }
 
 type EventBusConfig struct {
-	Brokers  []string
-	Topic    string
-	ClientID string
+	Brokers                []string
+	Topic                  string
+	ClientID               string
+	AllowAutoTopicCreation bool
 }
 
 func NewEventBus(config EventBusConfig) (*EventBus, error) {
@@ -41,13 +42,17 @@ func NewEventBus(config EventBusConfig) (*EventBus, error) {
 		ReadTimeout:      10 * time.Second,
 		CompressionCodec: snappy.NewCompressionCodec(),
 	}
-	// TODO: Review this implementation of https://github.com/friendsofgo/kafka-example/blob/master/pkg/kafka/publisher.go
-	// and use the defer conn.Close()
+	writer := kafka.NewWriter(c)
+	allowAutoTopicCreation(writer, config.AllowAutoTopicCreation)
 
 	return &EventBus{
 		config: config,
-		writer: kafka.NewWriter(c),
+		writer: writer,
 	}, nil
+}
+
+func allowAutoTopicCreation(writer *kafka.Writer, isAllowed bool) {
+	writer.AllowAutoTopicCreation = isAllowed
 }
 
 func conn(bootstrapBrokerAddr string, topic string) error {

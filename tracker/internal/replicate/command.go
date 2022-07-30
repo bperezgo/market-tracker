@@ -33,10 +33,10 @@ func (ReplicateCommand) Type() command.Type {
 }
 
 type ReplicateCommandHandler struct {
-	service *Replicator
+	service *ReplicatorStrategy
 }
 
-func NewReplicateCommandHandler(service *Replicator) ReplicateCommandHandler {
+func NewReplicateCommandHandler(service *ReplicatorStrategy) ReplicateCommandHandler {
 	return ReplicateCommandHandler{
 		service: service,
 	}

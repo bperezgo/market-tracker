@@ -15,24 +15,47 @@ func EstablishRealTimeConnections(ctx context.Context, commandBus command.Bus) e
 	if err != nil {
 		return err
 	}
+	allowAutoTopicCreation := true
+	replicatorStrategy := replicate.NewReplicatorStrategy()
 	for _, config := range c.Events {
 		eventBusConfig := kafka.EventBusConfig{
-			Brokers:  config.Brokers,
-			Topic:    config.Topic,
-			ClientID: config.ClientID,
+			Brokers:                config.Brokers,
+			Topic:                  config.Type,
+			ClientID:               config.ClientID,
+			AllowAutoTopicCreation: allowAutoTopicCreation,
 		}
 		eventBus, err := kafka.NewEventBus(eventBusConfig)
 		if err != nil {
 			return err
 		}
 		replicator := replicate.New(eventBus)
-		replicateCmdHandler := replicate.NewReplicateCommandHandler(replicator)
-		commandBus.Register(replicate.ReplicateCommandType, replicateCmdHandler)
+		replicatorStrategy.AppendReplicator(config.Exchange, replicator)
 	}
+
+	replicateCmdHandler := replicate.NewReplicateCommandHandler(replicatorStrategy)
+	commandBus.Register(replicate.ReplicateCommandType, replicateCmdHandler)
 
 	for _, config := range c.RealTimeConnections {
 		// TODO: Define strategy to create various factories invokations
-		return factory.NewTiingo(ctx, commandBus, config)
+		events := config.Events
+		for _, evt := range events {
+			eventBusConfig := kafka.EventBusConfig{
+				Brokers:                evt.Brokers,
+				Topic:                  evt.Type,
+				ClientID:               evt.ClientID,
+				AllowAutoTopicCreation: allowAutoTopicCreation,
+			}
+			eventBus, err := kafka.NewEventBus(eventBusConfig)
+			if err != nil {
+				return err
+			}
+			replicator := replicate.New(eventBus)
+			replicatorStrategy.AppendReplicator(evt.Exchange, replicator)
+		}
+		err := factory.NewTiingo(ctx, commandBus, config)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -1,26 +1,65 @@
 {
   "Port": 3000,
   "Host": "http://localhost",
-  "RealTimeConnections": {
-    "Tiingo": {
-      "TiingoApiUrl": "wss://api.tiingo.com/crypto",
-      "SubscriptionEvent": {
-        "EventName": "subscribe",
-        "Authorization": "some super secret key",
-        "EventData": {
-          "ThresholdLevel": 5
+  "RealTimeConnections": [
+    {
+      "RealTimeType": "Tiingo",
+      "Data": {
+        "TiingoApiUrl": "wss://api.tiingo.com/crypto",
+        "SubscriptionEvent": {
+          "eventName": "subscribe",
+          "authorization": "sometoken",
+          "eventData": {
+            "thresholdLevel": 5
+          }
         }
-      }
+      },
+      "Events": [
+        {
+          "Exchange": "binance",
+          "Type": "markettracker.tracker.1.binance.asset.recorded",
+          "Brokers": ["localhost:9093"],
+          "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
+        },
+        {
+          "Exchange": "huobi",
+          "Type": "markettracker.tracker.1.huobi.asset.recorded",
+          "Brokers": ["localhost:9093"],
+          "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
+        },
+        {
+          "Exchange": "mexc",
+          "Type": "markettracker.tracker.1.mexc.asset.recorded",
+          "Brokers": ["localhost:9093"],
+          "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
+        },
+        {
+          "Exchange": "kucoin",
+          "Type": "markettracker.tracker.1.kucoin.asset.recorded",
+          "Brokers": ["localhost:9093"],
+          "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
+        },
+        {
+          "Exchange": "ascendex",
+          "Type": "markettracker.tracker.1.ascendex.asset.recorded",
+          "Brokers": ["localhost:9093"],
+          "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
+        },
+        {
+          "Exchange": "gdax",
+          "Type": "markettracker.tracker.1.gdax.asset.recorded",
+          "Brokers": ["localhost:9093"],
+          "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
+        }
+      ]
     }
-  },
-  "TiingoApiToken": "some super secret key",
-  "TiingoApiUrl": "wss://api.tiingo.com/crypto",
+  ],
   "Events": [
     {
-      "Type": "",
+      "Exchange": "",
+      "Type": "markettracker.tracker.1.bvc.asset.recorded",
       "BrokerBootstrapAddr": "localhost:9093",
       "Brokers": ["localhost:9093"],
-      "Topic": "",
       "ClientID": "bd97b28a-82c6-45b4-9d01-4cf6dad2076f"
     }
   ]
