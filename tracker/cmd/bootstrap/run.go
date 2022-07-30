@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"markettracker.com/tracker/configs"
+	"markettracker.com/tracker/internal/platform/bus/inmemory"
 	"markettracker.com/tracker/internal/platform/server"
 )
 
@@ -14,10 +15,11 @@ func Run() error {
 	if err != nil {
 		return err
 	}
-	err = EstablishRealTimeConnections(ctx)
+	commandBus := inmemory.NewCommandBus()
+	err = EstablishRealTimeConnections(ctx, commandBus)
 	if err != nil {
 		return err
 	}
-	s := server.New(c.Host, c.Port)
+	s := server.New(c.Host, c.Port, commandBus)
 	return s.Start(ctx)
 }
