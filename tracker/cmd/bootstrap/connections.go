@@ -5,8 +5,10 @@ import (
 
 	"markettracker.com/pkg/command"
 	"markettracker.com/tracker/configs"
+	"markettracker.com/tracker/internal/domain"
 	"markettracker.com/tracker/internal/platform/bus/kafka"
 	"markettracker.com/tracker/internal/platform/factory"
+	"markettracker.com/tracker/internal/platform/repository"
 	"markettracker.com/tracker/internal/replicate"
 )
 
@@ -28,7 +30,18 @@ func EstablishRealTimeConnections(ctx context.Context, commandBus command.Bus) e
 		if err != nil {
 			return err
 		}
-		replicator := replicate.New(eventBus)
+		repoConfig := repository.PostgresqlConfig{
+			Host:     config.Repository.Host,
+			Port:     config.Repository.Port,
+			User:     config.Repository.User,
+			Password: config.Repository.Password,
+			Dbname:   config.Repository.Dbname,
+		}
+		assetRepo, err := repository.NewPostgresql(config.Repository.Table, repoConfig)
+		if err != nil {
+			return err
+		}
+		replicator := replicate.New(assetRepo, eventBus)
 		replicatorStrategy.AppendReplicator(config.Exchange, replicator)
 	}
 
@@ -49,7 +62,9 @@ func EstablishRealTimeConnections(ctx context.Context, commandBus command.Bus) e
 			if err != nil {
 				return err
 			}
-			replicator := replicate.New(eventBus)
+			// TODO: Create a different instance of this repo
+			repoMock := domain.AssetRepositoryMock{}
+			replicator := replicate.New(&repoMock, eventBus)
 			replicatorStrategy.AppendReplicator(evt.Exchange, replicator)
 		}
 		err := factory.NewTiingo(ctx, commandBus, config)

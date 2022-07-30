@@ -17,12 +17,22 @@ type RealTimeConnection struct {
 	Events []Event
 }
 
+type Repository struct {
+	Table    string
+	Host     string
+	Port     int
+	User     string
+	Password string
+	Dbname   string
+}
+
 type Event struct {
 	Type                string
 	BootstrapBrokerAddr string
 	Brokers             []string
 	ClientID            string
 	Exchange            string
+	Repository          Repository
 }
 
 var configuration *Configuration

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
@@ -35,6 +36,9 @@ type Postgresql struct {
 }
 
 func NewPostgresql(table string, config PostgresqlConfig) (*Postgresql, error) {
+	if table == "" {
+		return nil, fmt.Errorf("table must not be empty")
+	}
 	if config.SslMode == "" {
 		config.SslMode = "disable"
 	}
@@ -55,7 +59,7 @@ func NewPostgresql(table string, config PostgresqlConfig) (*Postgresql, error) {
 	}, nil
 }
 
-func (r *Postgresql) Save(asset domain.Asset) error {
+func (r *Postgresql) Save(ctx context.Context, asset domain.Asset) error {
 	sentence := fmt.Sprintf("INSERT INTO %s (id, created_at, price) VALUES (:id, :created_at, :price)", r.table)
 	row, err := r.conn.NamedQuery(sentence, AssetDTO{
 		Id:    asset.ID(),

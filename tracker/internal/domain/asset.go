@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -9,7 +10,7 @@ import (
 )
 
 type AssetRepository interface {
-	Save(asset Asset) error
+	Save(ctx context.Context, asset Asset) error
 }
 
 type Asset struct {

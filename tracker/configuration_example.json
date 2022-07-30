@@ -56,6 +56,14 @@
   ],
   "Events": [
     {
+      "Repository": {
+        "Table": "dummy_asset",
+        "Host": "http://localhost",
+        "Port": 5432,
+        "User": "tracker",
+        "Password": "dummy-pasword",
+        "Dbname": "tracker"
+      },
       "Exchange": "",
       "Type": "markettracker.tracker.1.bvc.asset.recorded",
       "BrokerBootstrapAddr": "localhost:9093",

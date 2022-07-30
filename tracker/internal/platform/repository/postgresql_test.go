@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -32,6 +33,7 @@ func Test_Save_Value(t *testing.T) {
 	asset, err := domain.NewAsset(uuid.NewString(), time.Now(), "dummy_asset", 123.4)
 	require.NoError(t, err, "failed the business rules")
 
-	err = repo.Save(asset)
+	ctx := context.Background()
+	err = repo.Save(ctx, asset)
 	assert.NoError(t, err, "unexpected error when is saving the asset ina dummy table")
 }
