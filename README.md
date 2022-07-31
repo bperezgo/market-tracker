@@ -25,3 +25,21 @@ The file configuration_example.json is an example of how it is necesary to setup
 #### Development
 
 Ensure to install [conventional-pre-commit](https://github.com/compilerla/conventional-pre-commit)
+
+## Migration
+
+To manage the migrations it is needed to install [golang-migrate](github.com/golang-migrate/migrate) This is used to simulate the production environment, and run the acceptance test rightly
+
+The next command is used to run the current migrations in the tracker application
+
+```bash
+migrate -source ./tracker/migration -database postgres://localhost:5432/database up 2
+```
+
+But, you can use
+
+```bash
+make migrate-create migration_name=<migraction_name>
+```
+
+Other commands are exposed in the makefile
