@@ -16,7 +16,7 @@ func initConfig() PostgresqlConfig {
 		Host:     "localhost",
 		Port:     5432,
 		User:     "tracker",
-		Password: "dummy-pasword",
+		Password: "dummy-password",
 		Dbname:   "tracker",
 	}
 }

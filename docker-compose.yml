@@ -24,9 +24,21 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
       - zookeeper
+  asset_repository:
+    image: postgres:14.4
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    environment:
+      - POSTGRES_PASSWORD=dummy-password
+      - POSTGRES_USER=tracker
+      - POSTGRES_DB=tracker
 
 volumes:
   zookeeper_data:
     driver: local
   kafka_data:
+    driver: local
+  postgres_data:
     driver: local
