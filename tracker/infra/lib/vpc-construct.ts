@@ -1,33 +1,38 @@
 import { Vpc, SecurityGroup, SubnetType } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
+import config from "./config";
 
 export class TrackerVpc extends Construct {
-  public trackerVpc: Vpc;
-  public trackerkafkaSecurityGroup: SecurityGroup;
+  public vpc: Vpc;
+  public kafkaSecurityGroup: SecurityGroup;
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    this.trackerVpc = new Vpc(this, id, {
+    this.vpc = new Vpc(this, config.components.vpc.name, {
       cidr: "10.0.0.0/16",
       vpcName: id,
       subnetConfiguration: [
         {
-          name: "tracker-subnet-priv",
-          subnetType: SubnetType.PRIVATE_ISOLATED,
+          name: config.components.vpc.props.privSubnet,
+          subnetType: SubnetType.PRIVATE_WITH_NAT,
           cidrMask: 24,
         },
         {
-          name: "tracker-subnet-pub",
+          name: config.components.vpc.props.pubSubnet,
           subnetType: SubnetType.PUBLIC,
           cidrMask: 24,
         },
       ],
     });
 
-    this.trackerkafkaSecurityGroup = new SecurityGroup(this, `${id}-SG`, {
-      description: "security group for tracker and for kafka broker",
-      securityGroupName: `${id}-SG`,
-      vpc: this.trackerVpc,
-    });
+    this.kafkaSecurityGroup = new SecurityGroup(
+      this,
+      `${config.components.vpc.name}-SG`,
+      {
+        description: "security group for tracker and for kafka broker",
+        securityGroupName: `${config.components.vpc.name}-SG`,
+        vpc: this.vpc,
+      }
+    );
   }
 }

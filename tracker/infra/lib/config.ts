@@ -1,24 +1,38 @@
-type ConfigKey = "vpc" | "kafka";
+type ConfigKey = "vpc" | "kafka" | "eks";
 
 export type Config = {
   prod: string;
   test: string;
-  stacks: {
+  components: {
     [key in ConfigKey]: {
       name: string;
+      props?: any;
     };
   };
 };
 
 const config: Config = {
-  prod: "prod",
-  test: "test",
-  stacks: {
+  prod: "ProdStack",
+  test: "TestStack",
+  components: {
     vpc: {
       name: "TrackerVPC",
+      props: {
+        privSubnet: "tracker-subnet-priv",
+        pubSubnet: "tracker-subnet-pub",
+      },
     },
     kafka: {
       name: "BrokerMessage",
+    },
+    eks: {
+      name: "EKSCluster",
+      props: {
+        nodeGroup: {
+          id: "EKSClusterNodeGroup-1",
+          intanceType: "t3.nano",
+        },
+      },
     },
   },
 };
